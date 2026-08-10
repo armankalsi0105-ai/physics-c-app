@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { BookOpen, X } from 'lucide-react'
 import { Latex } from '@/components/Latex'
 import { FORMULA_SECTIONS, FORMULA_SHEET } from '@/data/formulaSheet'
+import { useDialog } from '@/lib/useDialog'
 
 type Props = {
   open: boolean
@@ -12,36 +13,28 @@ type Props = {
 
 export function FormulaSheetDrawer({ open, onClose }: Props) {
   const [section, setSection] = useState(FORMULA_SECTIONS[0] ?? 'Kinematics')
+  const panelRef = useRef<HTMLElement>(null)
   const items = useMemo(
     () => FORMULA_SHEET.filter((f) => f.section === section),
     [section],
   )
 
-  useEffect(() => {
-    if (!open) return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
-    const prevOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    window.addEventListener('keydown', onKey)
-    return () => {
-      document.body.style.overflow = prevOverflow
-      window.removeEventListener('keydown', onKey)
-    }
-  }, [open, onClose])
+  useDialog(open, onClose, panelRef)
 
   return (
     <>
       <div
         className={`drawer-backdrop ${open ? 'is-open' : ''}`}
         onClick={onClose}
-        aria-hidden={!open}
+        aria-hidden
       />
       <aside
+        ref={panelRef}
         className={`formula-drawer ${open ? 'is-open' : ''}`}
-        aria-hidden={!open}
-        aria-modal={open}
+        // Off-canvas panels stay painted, so `inert` is what keeps their
+        // controls out of the tab order and the a11y tree while closed.
+        inert={!open}
+        aria-modal={open || undefined}
         role="dialog"
         aria-label="AP Formula Sheet"
       >
@@ -99,11 +92,11 @@ export function FormulaSheetButton({ onClick }: { onClick: () => void }) {
     <button
       type="button"
       onClick={onClick}
-      className="stat-chip formula-trigger"
+      className="stat-chip formula-trigger show-from-md"
       title="Open AP Formula Sheet"
     >
       <BookOpen className="h-3.5 w-3.5 text-[color:var(--accent)]" />
-      <span className="hidden sm:inline">Formulas</span>
+      <span className="hidden lg:inline">Formulas</span>
     </button>
   )
 }

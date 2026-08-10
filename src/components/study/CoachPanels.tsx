@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import {
   ArrowRight,
   Brain,
@@ -130,9 +130,13 @@ export function TeachBack({ day }: { day: number }) {
   const [text, setText] = useState(saved)
   const [flash, setFlash] = useState(false)
 
-  useEffect(() => {
-    setText(state.pedagogy.teachBack[String(day)] ?? '')
-  }, [day, state.pedagogy.teachBack])
+  // Reload the draft when the student moves to another day. Deliberately not
+  // synced on every store change — that would overwrite what they are typing.
+  const [lastDay, setLastDay] = useState(day)
+  if (lastDay !== day) {
+    setLastDay(day)
+    setText(saved)
+  }
 
   return (
     <div className="teachback">

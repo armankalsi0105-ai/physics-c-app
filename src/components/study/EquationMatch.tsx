@@ -5,17 +5,15 @@ import { Timer, Trophy } from 'lucide-react'
 import { MathText } from '@/components/MathText'
 import { flashcardsForDay } from '@/data/flashcards'
 import { useProgress } from '@/context/ProgressContext'
+import { seededShuffle, shuffle } from '@/lib/shuffle'
 
 type Pair = { id: string; left: string; right: string }
 
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr]
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[a[i], a[j]] = [a[j], a[i]]
-  }
-  return a
-}
+// The opening board is seeded off the day so the server and the client lay out
+// the same tiles. Re-shuffles after a wrong match are post-interaction, where
+// true randomness is safe.
+const openingBoard = (ids: string[], day: number, column: number) =>
+  seededShuffle(ids, day * 2 + column)
 
 export function EquationMatch({ day }: { day: number }) {
   const cards = useMemo(() => flashcardsForDay(day).slice(0, 4), [day])
@@ -25,9 +23,19 @@ export function EquationMatch({ day }: { day: number }) {
     [cards],
   )
 
-  const [leftOrder] = useState(() => shuffle(pairs.map((p) => p.id)))
+  const [leftOrder] = useState(() =>
+    openingBoard(
+      pairs.map((p) => p.id),
+      day,
+      0,
+    ),
+  )
   const [rightOrder, setRightOrder] = useState(() =>
-    shuffle(pairs.map((p) => p.id)),
+    openingBoard(
+      pairs.map((p) => p.id),
+      day,
+      1,
+    ),
   )
   const [selectedLeft, setSelectedLeft] = useState<string | null>(null)
   const [matched, setMatched] = useState<string[]>([])

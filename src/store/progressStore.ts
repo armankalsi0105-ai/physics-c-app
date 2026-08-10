@@ -678,7 +678,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
   unlockHidden: (id) => {
     get().setState((prev) => {
       if (prev.hiddenAchievements.includes(id)) return prev
-      let next = {
+      const next = {
         ...prev,
         hiddenAchievements: [...prev.hiddenAchievements, id],
       }
@@ -721,7 +721,7 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
     get().setState((prev) => {
       const best = prev.speedrunBest[dayKey]
       if (best != null && seconds >= best) return prev
-      let next = {
+      const next = {
         ...prev,
         speedrunBest: { ...prev.speedrunBest, [dayKey]: seconds },
       }

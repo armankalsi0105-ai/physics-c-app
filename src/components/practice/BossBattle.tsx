@@ -37,12 +37,17 @@ export function BossBattle({ day }: { day: number }) {
     return () => window.clearInterval(id)
   }, [active, cleared])
 
-  useEffect(() => {
-    if (correctCount >= problems.length && problems.length > 0 && active) {
+  // Winning is a consequence of the last correct answer, so it is settled in
+  // the result handler rather than by an effect watching the score.
+  const onProblemResult = (ok: boolean) => {
+    if (!ok || !active) return
+    const next = correctCount + 1
+    setCorrectCount(next)
+    if (next >= problems.length && problems.length > 0) {
       clearBoss(bossId)
       setActive(false)
     }
-  }, [correctCount, problems.length, active, bossId, clearBoss])
+  }
 
   if (!BOSS_DAYS.has(day) || problems.length === 0) return null
 
@@ -81,9 +86,7 @@ export function BossBattle({ day }: { day: number }) {
               index={i}
               day={day}
               section="physics"
-              onResult={(ok) => {
-                if (ok) setCorrectCount((c) => c + 1)
-              }}
+              onResult={onProblemResult}
             />
           ))}
         </div>

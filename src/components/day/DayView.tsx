@@ -1,6 +1,6 @@
 'use client'
 
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
@@ -87,12 +87,17 @@ export function DayView({ day }: { day: DayContent }) {
     setActiveDay(day.day)
   }, [day.day, setActiveDay])
 
-  useEffect(() => {
-    if (!note) return
+  // The flash is a response to the user typing, not to `note` changing — driving
+  // it from the change handler keeps it out of an effect and off the render path.
+  const flashTimer = useRef<number | undefined>(undefined)
+  useEffect(() => () => window.clearTimeout(flashTimer.current), [])
+
+  const onNoteChange = (value: string) => {
+    setNote(day.day, value)
     setSavedFlash(true)
-    const id = window.setTimeout(() => setSavedFlash(false), 900)
-    return () => window.clearTimeout(id)
-  }, [note])
+    window.clearTimeout(flashTimer.current)
+    flashTimer.current = window.setTimeout(() => setSavedFlash(false), 900)
+  }
 
   return (
     <article className="day-view">
@@ -281,7 +286,7 @@ export function DayView({ day }: { day: DayContent }) {
         <textarea
           id="notes"
           value={note}
-          onChange={(e) => setNote(day.day, e.target.value)}
+          onChange={(e) => onNoteChange(e.target.value)}
           rows={5}
           placeholder="Answer the reflection prompts in your own words…"
           className="notes-field"
@@ -321,16 +326,19 @@ export function DayView({ day }: { day: DayContent }) {
         Formula explorer
       </button>
 
-      <Suspense fallback={null}>
-        <FormulaExplorer
-          open={formulaOpen || explorer.open}
-          onClose={() => {
-            setFormulaOpen(false)
-            explorer.closeExplorer()
-          }}
-          initialQuery={explorer.query}
-        />
-      </Suspense>
+      {/* Mounted only while open: the explorer then starts from a clean slate
+          each time, and its chunk is not fetched until a student asks for it. */}
+      {(formulaOpen || explorer.open) && (
+        <Suspense fallback={null}>
+          <FormulaExplorer
+            onClose={() => {
+              setFormulaOpen(false)
+              explorer.closeExplorer()
+            }}
+            initialQuery={explorer.query}
+          />
+        </Suspense>
+      )}
     </article>
   )
 }

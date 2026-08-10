@@ -205,19 +205,23 @@ export function ProgressProvider({ children }: { children: React.ReactNode }) {
     })),
   )
 
+  // Zustand actions are stable, so destructure them out and depend on the
+  // functions themselves rather than the `actions` object the linter sees.
+  const { hydrate, tickStudyTime } = actions
+
   useEffect(() => {
-    actions.hydrate()
-  }, [actions.hydrate])
+    hydrate()
+  }, [hydrate])
 
   useEffect(() => {
     if (!ready) return
     const TICK = 15
     const id = window.setInterval(() => {
       if (document.visibilityState === 'hidden') return
-      actions.tickStudyTime(TICK)
+      tickStudyTime(TICK)
     }, TICK * 1000)
     return () => window.clearInterval(id)
-  }, [ready, actions.tickStudyTime])
+  }, [ready, tickStudyTime])
 
   const dueSrsItems = useMemo(() => {
     const today = todayKey()

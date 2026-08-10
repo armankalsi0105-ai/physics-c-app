@@ -3,7 +3,7 @@
 import { FormulaSheetDrawer } from '@/components/study/FormulaSheetDrawer'
 import { Header } from './Header'
 import { Sidebar } from './Sidebar'
-import { useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 export function AppShell({
   currentDay,
@@ -14,27 +14,53 @@ export function AppShell({
 }) {
   const [navOpen, setNavOpen] = useState(false)
   const [formulaOpen, setFormulaOpen] = useState(false)
+  const [isDesktop, setIsDesktop] = useState(false)
+
+  // The syllabus is a modal drawer only below `lg`; track the breakpoint so
+  // scroll lock, the focus trap, and `inert` never leak onto the desktop rail.
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)')
+    const sync = () => {
+      setIsDesktop(mq.matches)
+      if (mq.matches) setNavOpen(false)
+    }
+    sync()
+    mq.addEventListener('change', sync)
+    return () => mq.removeEventListener('change', sync)
+  }, [])
+
+  const closeNav = useCallback(() => setNavOpen(false), [])
+  const closeFormulas = useCallback(() => setFormulaOpen(false), [])
+  const openFormulas = useCallback(() => {
+    setNavOpen(false)
+    setFormulaOpen(true)
+  }, [])
 
   return (
     <div className="relative min-h-screen text-[color:var(--ink)]">
       <div className="atmosphere" aria-hidden />
+      <a href="#main-content" className="skip-link">
+        Skip to lesson content
+      </a>
       <Header
         currentDay={currentDay}
+        navOpen={navOpen}
         onToggleNav={() => setNavOpen((o) => !o)}
-        onOpenFormulas={() => setFormulaOpen(true)}
+        onOpenFormulas={openFormulas}
       />
       <div className="mx-auto grid max-w-7xl gap-6 px-3 py-5 sm:px-4 lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-8 lg:py-7">
         <Sidebar
           currentDay={currentDay}
           open={navOpen}
-          onClose={() => setNavOpen(false)}
+          onClose={closeNav}
+          onOpenFormulas={openFormulas}
+          isDesktop={isDesktop}
         />
-        <main className="min-w-0">{children}</main>
+        <main id="main-content" className="min-w-0">
+          {children}
+        </main>
       </div>
-      <FormulaSheetDrawer
-        open={formulaOpen}
-        onClose={() => setFormulaOpen(false)}
-      />
+      <FormulaSheetDrawer open={formulaOpen} onClose={closeFormulas} />
     </div>
   )
 }

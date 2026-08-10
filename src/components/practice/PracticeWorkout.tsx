@@ -71,7 +71,8 @@ export function PracticeWorkout({ day, problems }: Props) {
   const [reflection, setReflection] = useState('')
   const [confidence, setConfidence] = useState(3)
   const [setResults, setSetResults] = useState<boolean[]>([])
-  const setStartRef = useRef(Date.now())
+  // Stamped on mount by the effect below — `Date.now()` during render is impure.
+  const setStartRef = useRef(0)
   const mistakesRef = useRef<MisconceptionTag[]>([])
 
   const sets = useMemo(
@@ -108,16 +109,26 @@ export function PracticeWorkout({ day, problems }: Props) {
     return () => window.clearInterval(id)
   }, [phase, sets.length])
 
-  useEffect(() => {
-    if (firstOpen >= 0 && firstOpen !== active) setActive(firstOpen)
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- sync open set only
-  }, [firstOpen])
+  // Follow the first unfinished set as progress is recorded. Adjusting during
+  // render rather than in an effect avoids a pass showing the stale set.
+  const [lastFirstOpen, setLastFirstOpen] = useState(firstOpen)
+  if (lastFirstOpen !== firstOpen) {
+    setLastFirstOpen(firstOpen)
+    if (firstOpen >= 0) setActive(firstOpen)
+  }
+
+  // Every set/phase change starts with a blank reflection and neutral confidence.
+  const stage = `${active}:${phase}`
+  const [lastStage, setLastStage] = useState(stage)
+  if (lastStage !== stage) {
+    setLastStage(stage)
+    setReflection('')
+    setConfidence(3)
+  }
 
   useEffect(() => {
     setStartRef.current = Date.now()
     mistakesRef.current = []
-    setReflection('')
-    setConfidence(3)
   }, [active, phase])
 
   const current = sets[active]
@@ -170,15 +181,7 @@ export function PracticeWorkout({ day, problems }: Props) {
       setPhase('rest')
       setRestLeft(REST_SECONDS)
     },
-    [
-      active,
-      confidence,
-      completePracticeSet,
-      current,
-      day,
-      recordKineticSet,
-      sets,
-    ],
+    [confidence, completePracticeSet, current, day, recordKineticSet, sets],
   )
 
   if (!current?.problem) return null

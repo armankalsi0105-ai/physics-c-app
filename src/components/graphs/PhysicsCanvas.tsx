@@ -65,9 +65,14 @@ export function PhysicsCanvas({ config }: { config: GraphConfig }) {
   const [mags] = useState(defaultForces.mags)
   const [showAccel, setShowAccel] = useState(true)
 
-  useEffect(() => {
+  // Reset the toggles when the caller swaps in a different force set. Adjusting
+  // during render (rather than in an effect) avoids a wasted pass with the old
+  // forces still drawn. https://react.dev/learn/you-might-not-need-an-effect
+  const [lastForces, setLastForces] = useState(defaultForces)
+  if (lastForces !== defaultForces) {
+    setLastForces(defaultForces)
     setEnabled(defaultForces.enabled)
-  }, [defaultForces])
+  }
 
   useEffect(() => {
     const canvas = ref.current
