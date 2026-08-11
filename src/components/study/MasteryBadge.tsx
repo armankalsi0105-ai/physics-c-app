@@ -12,6 +12,9 @@ export function MasteryBadge({
   state: ProgressState
 }) {
   const level: MasteryLevel = computeDayMastery(day, state)
+  // "Unstarted" next to the hero's own completion status reads as a
+  // contradiction; the badge only says something once mastery is under way.
+  if (level === 'unstarted') return null
   return (
     <span
       className={`mastery-badge mastery-badge--${level}`}

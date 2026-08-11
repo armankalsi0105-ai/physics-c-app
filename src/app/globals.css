@@ -4087,6 +4087,231 @@ p.lead {
   margin-bottom: 1.25rem;
 }
 
+
+/* ==========================================================================
+   Bold editorial pass
+   Arriving at a day should read like opening a chapter: a full-bleed header
+   band carries the number, title and progress, a connected rail shows the
+   seven steps, and section markers are set as display numerals.
+   ========================================================================== */
+
+.day-view {
+  max-width: 48rem;
+  padding: 0 0 4.5rem;
+  overflow: hidden;
+}
+
+/* ---- Chapter band ---- */
+
+.day-hero {
+  position: relative;
+  margin: 0 0 1.5rem;
+  padding: 2.25rem 2.25rem 2rem;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+  background:
+    radial-gradient(
+      120% 140% at 100% 0%,
+      color-mix(in srgb, var(--accent) 26%, transparent) 0%,
+      transparent 62%
+    ),
+    linear-gradient(
+      152deg,
+      color-mix(in srgb, var(--accent) 13%, var(--panel)) 0%,
+      var(--panel) 68%
+    );
+}
+
+/* Cropped along the bottom edge on purpose; keep it clear of the right edge
+   so it never looks like a glyph that simply ran out of room. */
+.day-hero__numeral {
+  top: auto;
+  bottom: -1.9rem;
+  right: 1.75rem;
+  transform: none;
+  font-size: clamp(6.5rem, 13vw, 10.5rem);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.8;
+  color: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.day-hero__top {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.day-hero__kicker {
+  gap: 0.55rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  color: var(--accent);
+}
+
+.day-hero__kicker::before {
+  width: 2rem;
+  height: 2px;
+}
+
+.day-hero__ring {
+  flex: none;
+}
+
+.day-hero h1 {
+  position: relative;
+  margin: 1rem 0 0;
+  max-width: 17ch;
+  font-size: clamp(2.1rem, 5.4vw, 3.35rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+}
+
+.day-hero__meta {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1.15rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.day-hero__meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.day-hero__meta .is-done {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.day-hero__meta .is-open {
+  color: var(--signal);
+  font-weight: 700;
+}
+
+.hero-chips {
+  position: relative;
+  margin-top: 1.15rem;
+}
+
+/* ---- Body gutter ----
+   The band bleeds to the card edge, so everything after it needs its own
+   horizontal padding rather than inheriting it from .day-view. */
+
+.day-view > *:not(.day-hero) {
+  padding-left: 2.25rem;
+  padding-right: 2.25rem;
+}
+
+/* ---- Connected step rail ---- */
+
+.arc-nav {
+  top: 3.9rem;
+  margin: 0 0 2.25rem;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+}
+
+.arc-nav__list {
+  gap: 0;
+}
+
+/* Hairline through the numerals turns seven pills into one sequence. */
+.arc-nav__list li {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.arc-nav__list li:not(:last-child)::after {
+  content: '';
+  width: 0.85rem;
+  height: 1px;
+  flex: none;
+  background: var(--line);
+}
+
+.arc-nav a {
+  padding: 0 0.5rem 0 0.3rem;
+}
+
+.arc-nav__num {
+  width: 1.55rem;
+  height: 1.55rem;
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1.5px var(--line);
+  font-size: 0.68rem;
+}
+
+/* ---- Section markers ---- */
+
+.section-block {
+  margin-bottom: 3.5rem;
+}
+
+.section-head {
+  align-items: baseline;
+  gap: 0.85rem;
+  margin-bottom: 1.1rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.section-head__num {
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+}
+
+.section-head h2 {
+  flex: 1 1 auto;
+  font-size: clamp(1.25rem, 2.6vw, 1.6rem);
+  letter-spacing: -0.02em;
+}
+
+.section-head__time {
+  flex: none;
+}
+
+@media (max-width: 639px) {
+  .day-hero {
+    padding: 1.6rem 1.15rem 1.5rem;
+  }
+  .day-view > *:not(.day-hero) {
+    padding-left: 1.15rem;
+    padding-right: 1.15rem;
+  }
+  .day-hero__numeral {
+    display: block;
+    bottom: -1.8rem;
+    font-size: 7rem;
+  }
+  .day-hero h1 {
+    max-width: none;
+  }
+  .section-head__num {
+    font-size: 1.5rem;
+  }
+}
+
 /* ---------- Responsive visibility helpers ----------
  *
  * Tailwind is imported at the top of this file, so its display utilities

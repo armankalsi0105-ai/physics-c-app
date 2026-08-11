@@ -27,6 +27,7 @@ import { KnowledgeGraphPanel } from '@/components/study/KnowledgeGraphPanel'
 import { SandboxHost } from '@/components/sims/SandboxHost'
 import { BossBattle } from '@/components/practice/BossBattle'
 import { HighlightNotebook } from '@/components/notebook/HighlightNotebook'
+import { ProgressRing } from '@/components/ui/ProgressRing'
 import { getTodaysFocusChip } from '@/lib/adaptive'
 import { useFormulaExplorer } from '@/context/FormulaExplorerContext'
 import {
@@ -42,7 +43,7 @@ import {
   TeachBack,
 } from '@/components/study/CoachPanels'
 import { useProgress } from '@/context/ProgressContext'
-import { getDay } from '@/lib/curriculum'
+import { curriculum, getDay } from '@/lib/curriculum'
 import { getDayStatus } from '@/lib/storage'
 import type { DayContent } from '@/lib/types'
 
@@ -73,6 +74,7 @@ export function DayView({ day }: { day: DayContent }) {
   const { completeDay, setActiveDay, setNote, state, dueSrsItems } =
     useProgress()
   const completed = state.completedDays.includes(day.day)
+  const completedCount = state.completedDays.length
   const note = state.notes[String(day.day)] ?? ''
   const prev = getDay(day.day - 1)
   const next = getDay(day.day + 1)
@@ -100,36 +102,59 @@ export function DayView({ day }: { day: DayContent }) {
 
   return (
     <article className="day-view">
+      {/* Full-bleed editorial band: arriving at a day should feel like opening
+          a chapter, so the number, title and progress get the top of the page. */}
       <header className="day-hero">
         <span className="day-hero__numeral" aria-hidden>
           {String(day.day).padStart(2, '0')}
         </span>
-        <p className="day-hero__kicker">Day {day.day} of 20</p>
+
+        <div className="day-hero__top">
+          <p className="day-hero__kicker">
+            Day {String(day.day).padStart(2, '0')}{' '}
+            <span aria-hidden>/</span> {curriculum.totalDays}
+          </p>
+          <ProgressRing
+            value={completedCount}
+            max={curriculum.totalDays}
+            size={54}
+            stroke={4}
+            label={`${completedCount} of ${curriculum.totalDays} days complete`}
+            className="day-hero__ring"
+          />
+        </div>
+
         <h1>
           <MathText text={day.title} />
         </h1>
+
+        <p className="day-hero__meta">
+          <span>~95 min</span>
+          <span aria-hidden>·</span>
+          <span>{JUMP.length} sections</span>
+          <span aria-hidden>·</span>
+          <span className={completed ? 'is-done' : 'is-open'}>
+            {completed ? (
+              <>
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                Completed
+                {typeof state.quizScores[String(day.day)] === 'number' &&
+                  ` · quiz ${state.quizScores[String(day.day)]}/3`}
+              </>
+            ) : (
+              <>
+                <CircleDot className="h-3.5 w-3.5" />
+                In progress
+              </>
+            )}
+          </span>
+        </p>
+
         <div className="hero-chips">
           <MasteryBadge day={day.day} state={state} />
           <span className="hero-chip hero-chip--focus">
             <Target className="h-3.5 w-3.5" />
             {focusChip.text}
-          </span>
-          {completed ? (
-            <span className="hero-chip hero-chip--status-done">
-              <CheckCircle2 className="h-3.5 w-3.5" />
-              Completed
-              {typeof state.quizScores[String(day.day)] === 'number' &&
-                ` · quiz ${state.quizScores[String(day.day)]}/3`}
-            </span>
-          ) : (
-            <span className="hero-chip hero-chip--status-open">
-              <CircleDot className="h-3.5 w-3.5" />
-              In progress
-            </span>
-          )}
-          <span className="hero-chip hero-chip--plain">
-            <Clock3 className="h-3.5 w-3.5" />
-            ~95 min
           </span>
         </div>
       </header>
