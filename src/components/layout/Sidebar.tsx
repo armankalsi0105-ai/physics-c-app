@@ -142,7 +142,7 @@ export function Sidebar({
           {PHASES.map((phase) => (
             <div key={phase.label}>
               <p className="phase-label">{phase.label}</p>
-              <ul className="m-0 list-none space-y-0.5 p-0">
+              <ul className="day-nav-list">
                 {phase.days.map((n) => {
                   const d = curriculum.days.find((x) => x.day === n)
                   if (!d) return null

@@ -506,49 +506,6 @@ html[data-theme='light'] .atmosphere {
   animation: rise 460ms ease both;
 }
 
-.day-hero {
-  position: relative;
-  margin: -0.15rem 0 1.75rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid var(--line);
-  overflow: hidden;
-}
-
-.day-hero__numeral {
-  position: absolute;
-  top: 45%;
-  right: -0.4rem;
-  transform: translateY(-50%);
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(5.5rem, 18vw, 8.5rem);
-  font-weight: 800;
-  line-height: 1;
-  color: rgba(21, 32, 43, 0.05);
-  user-select: none;
-  pointer-events: none;
-}
-
-.day-hero__kicker {
-  margin: 0;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-.day-hero h1 {
-  position: relative;
-  margin: 0.45rem 0 0;
-  max-width: 16ch;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(1.65rem, 4.2vw, 2.35rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
-  color: var(--ink);
-}
-
 .hero-chips {
   display: flex;
   flex-wrap: wrap;
@@ -1550,10 +1507,6 @@ html[data-theme='dark'] .topbar {
 
 html[data-theme='dark'] .sidebar-panel {
   background: rgba(23, 30, 40, 0.98);
-}
-
-html[data-theme='dark'] .day-hero__numeral {
-  color: rgba(232, 238, 244, 0.06);
 }
 
 html[data-theme='dark'] .day-footer-nav a {
@@ -3514,17 +3467,6 @@ html {
   padding: 0 0.5rem 2rem;
 }
 
-.analytics-dash__hero h1 {
-  margin: 0;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 1.75rem;
-}
-
-.analytics-dash__hero p {
-  margin: 0.35rem 0 1.25rem;
-  color: var(--ink-soft);
-}
-
 .analytics-dash__stats {
   display: grid;
   gap: 0.75rem;
@@ -3622,13 +3564,6 @@ html {
   color: var(--muted);
 }
 .exam-mode { max-width: 48rem; }
-.exam-mode__head {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: center;
-  margin-bottom: 1.25rem;
-}
 .exam-mode__timer {
   display: inline-flex;
   gap: 0.35rem;
@@ -3740,45 +3675,6 @@ html[data-theme='light'] {
   box-shadow: var(--shadow-lg);
 }
 
-/* ---- Hero ---- */
-
-.day-hero {
-  margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
-}
-
-/* Sit the watermark behind the title instead of letting it clip on the edge. */
-.day-hero__numeral {
-  top: 50%;
-  right: 0;
-  font-size: clamp(4.5rem, 12vw, 7.5rem);
-  letter-spacing: -0.05em;
-  color: color-mix(in srgb, var(--accent) 12%, transparent);
-}
-
-.day-hero__kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.68rem;
-  letter-spacing: 0.18em;
-}
-
-.day-hero__kicker::before {
-  content: '';
-  width: 1.6rem;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--accent);
-}
-
-.day-hero h1 {
-  margin-top: 0.7rem;
-  max-width: 20ch;
-  font-size: clamp(1.8rem, 4.4vw, 2.6rem);
-  line-height: 1.08;
-}
-
 .hero-chips {
   margin-top: 1.15rem;
   gap: 0.4rem;
@@ -3798,14 +3694,6 @@ html[data-theme='light'] {
   .day-view {
     padding: 1.25rem 1.1rem 3rem;
     border-radius: 16px;
-  }
-  /* The title fills the card at this width, so the watermark would sit on
-     top of the words rather than behind empty space. */
-  .day-hero__numeral {
-    display: none;
-  }
-  .day-hero h1 {
-    max-width: none;
   }
 }
 
@@ -4076,38 +3964,46 @@ p.lead {
   border-radius: 12px;
 }
 
-/* ---- Hero → content spacing ---- */
-
-.day-hero {
-  padding-bottom: 1.35rem;
-  margin-bottom: 1.5rem;
-}
-
 .kg-panel {
   margin-bottom: 1.25rem;
 }
 
 
+
 /* ==========================================================================
-   Bold editorial pass
-   Arriving at a day should read like opening a chapter: a full-bleed header
-   band carries the number, title and progress, a connected rail shows the
-   seven steps, and section markers are set as display numerals.
+   Editorial system
+   One full-bleed band, one gutter, one section-marker style — shared by the
+   day, exam and analytics routes so arriving anywhere feels the same.
    ========================================================================== */
 
-.day-view {
+.day-view,
+.exam-mode,
+.analytics-dash {
+  position: relative;
   max-width: 48rem;
+  margin: 0 auto;
   padding: 0 0 4.5rem;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--panel);
+  box-shadow: var(--shadow-lg);
   overflow: hidden;
 }
 
-/* ---- Chapter band ---- */
+/* The band bleeds edge to edge, so siblings carry their own gutter. */
+.day-view > *:not(.page-hero),
+.exam-mode > *:not(.page-hero),
+.analytics-dash > *:not(.page-hero) {
+  padding-left: 2.25rem;
+  padding-right: 2.25rem;
+}
 
-.day-hero {
+/* ---- Band ---- */
+
+.page-hero {
   position: relative;
-  margin: 0 0 1.5rem;
+  margin: 0 0 1.75rem;
   padding: 2.25rem 2.25rem 2rem;
-  border: 0;
   border-bottom: 1px solid var(--line);
   overflow: hidden;
   background:
@@ -4123,21 +4019,23 @@ p.lead {
     );
 }
 
-/* Cropped along the bottom edge on purpose; keep it clear of the right edge
-   so it never looks like a glyph that simply ran out of room. */
-.day-hero__numeral {
-  top: auto;
+/* Cropped along the bottom on purpose; kept clear of the right edge so it
+   never looks like a glyph that simply ran out of room. */
+.page-hero__watermark {
+  position: absolute;
   bottom: -1.9rem;
   right: 1.75rem;
-  transform: none;
+  font-family: var(--font-display), Georgia, serif;
   font-size: clamp(6.5rem, 13vw, 10.5rem);
   font-weight: 800;
-  letter-spacing: -0.06em;
   line-height: 0.8;
+  letter-spacing: -0.06em;
   color: color-mix(in srgb, var(--accent) 14%, transparent);
+  user-select: none;
+  pointer-events: none;
 }
 
-.day-hero__top {
+.page-hero__top {
   position: relative;
   display: flex;
   align-items: flex-start;
@@ -4145,33 +4043,43 @@ p.lead {
   gap: 1rem;
 }
 
-.day-hero__kicker {
+.page-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
   gap: 0.55rem;
+  margin: 0;
   font-size: 0.7rem;
+  font-weight: 700;
   letter-spacing: 0.24em;
+  text-transform: uppercase;
   color: var(--accent);
 }
 
-.day-hero__kicker::before {
+.page-hero__eyebrow::before {
+  content: '';
   width: 2rem;
   height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
 }
 
-.day-hero__ring {
+.page-hero__aside {
   flex: none;
 }
 
-.day-hero h1 {
+.page-hero__title {
   position: relative;
   margin: 1rem 0 0;
   max-width: 17ch;
+  font-family: var(--font-display), Georgia, serif;
   font-size: clamp(2.1rem, 5.4vw, 3.35rem);
   font-weight: 800;
   letter-spacing: -0.035em;
   line-height: 1.02;
+  color: var(--ink);
 }
 
-.day-hero__meta {
+.page-hero__meta {
   position: relative;
   display: flex;
   flex-wrap: wrap;
@@ -4183,34 +4091,39 @@ p.lead {
   color: var(--muted);
 }
 
-.day-hero__meta > span {
+.page-hero__fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.page-hero__fact > span:not(.page-hero__sep) {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
 }
 
-.day-hero__meta .is-done {
+.page-hero__sep {
+  color: var(--line-strong);
+}
+
+.page-hero__meta .is-done {
   color: var(--accent);
   font-weight: 700;
 }
 
-.day-hero__meta .is-open {
+.page-hero__meta .is-open {
   color: var(--signal);
   font-weight: 700;
 }
 
-.hero-chips {
+.page-hero__actions {
   position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
   margin-top: 1.15rem;
-}
-
-/* ---- Body gutter ----
-   The band bleeds to the card edge, so everything after it needs its own
-   horizontal padding rather than inheriting it from .day-view. */
-
-.day-view > *:not(.day-hero) {
-  padding-left: 2.25rem;
-  padding-right: 2.25rem;
 }
 
 /* ---- Connected step rail ---- */
@@ -4226,13 +4139,13 @@ p.lead {
   gap: 0;
 }
 
-/* Hairline through the numerals turns seven pills into one sequence. */
 .arc-nav__list li {
   position: relative;
   display: flex;
   align-items: center;
 }
 
+/* Hairlines between the numerals make seven pills read as one sequence. */
 .arc-nav__list li:not(:last-child)::after {
   content: '';
   width: 0.85rem;
@@ -4259,12 +4172,17 @@ p.lead {
   margin-bottom: 3.5rem;
 }
 
+.section-head,
+.exam-mode > section > h2,
+.analytics-dash h2 {
+  border-bottom: 2px solid var(--ink);
+}
+
 .section-head {
   align-items: baseline;
   gap: 0.85rem;
   margin-bottom: 1.1rem;
   padding-bottom: 0.7rem;
-  border-bottom: 2px solid var(--ink);
 }
 
 .section-head__num {
@@ -4291,25 +4209,167 @@ p.lead {
   flex: none;
 }
 
+/* Exam and analytics use bare h2s rather than the numbered SectionHead. */
+.exam-mode > section > h2,
+.analytics-dash h2 {
+  margin: 2.5rem 0 1.1rem;
+  padding-bottom: 0.7rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.25rem, 2.6vw, 1.6rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.exam-mode > section:first-of-type > h2,
+.analytics-dash h2:first-of-type {
+  margin-top: 0;
+}
+
+/* ---- Exam timer ---- */
+
+.exam-mode__timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 38%, transparent);
+  font-size: 1.05rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+.exam-mode__timer.is-urgent {
+  background: color-mix(in srgb, var(--signal) 16%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--signal) 42%, transparent);
+  color: var(--signal);
+}
+
 @media (max-width: 639px) {
-  .day-hero {
+  .day-view,
+  .exam-mode,
+  .analytics-dash {
+    border-radius: 16px;
+  }
+  .page-hero {
     padding: 1.6rem 1.15rem 1.5rem;
   }
-  .day-view > *:not(.day-hero) {
+  .day-view > *:not(.page-hero),
+  .exam-mode > *:not(.page-hero),
+  .analytics-dash > *:not(.page-hero) {
     padding-left: 1.15rem;
     padding-right: 1.15rem;
   }
-  .day-hero__numeral {
-    display: block;
-    bottom: -1.8rem;
-    font-size: 7rem;
+  .page-hero__watermark {
+    bottom: -1.4rem;
+    right: 1rem;
+    font-size: 6.5rem;
   }
-  .day-hero h1 {
+  .page-hero__title {
     max-width: none;
   }
   .section-head__num {
     font-size: 1.5rem;
   }
+}
+
+
+/* ---------- Syllabus as a journey spine ----------
+ *
+ * A flat list of twenty links gave no sense of a route through the course.
+ * A rail behind the day markers turns it into a visible path: filled behind
+ * finished days, hollow ahead of them.
+ */
+
+.day-nav-list {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The rail sits under the markers, inset to their centre line. */
+.day-nav-list::before {
+  content: '';
+  position: absolute;
+  top: 1.35rem;
+  bottom: 1.35rem;
+  left: calc(0.55rem + 0.825rem);
+  width: 2px;
+  border-radius: 2px;
+  background: var(--line);
+}
+
+.day-nav-link {
+  position: relative;
+  gap: 0.7rem;
+  min-height: 2.6rem;
+  border-radius: 9px;
+}
+
+.day-nav-link:hover {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.day-nav-link.is-active {
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  background: color-mix(in srgb, var(--accent) 11%, transparent);
+  box-shadow: var(--ring-accent);
+}
+
+.day-nav-link.is-locked {
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.day-nav-link.is-locked .day-num--locked,
+.day-nav-link.is-locked span {
+  color: var(--muted);
+}
+
+/* Markers ride on top of the rail, so they need an opaque backing. */
+.day-num {
+  position: relative;
+  z-index: 1;
+  height: 1.65rem;
+  width: 1.65rem;
+  border-radius: 999px;
+  background: var(--panel);
+  box-shadow: 0 0 0 3px var(--panel);
+}
+
+.day-num--done {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper);
+}
+
+.day-num--locked {
+  background: var(--panel);
+  border-style: dashed;
+}
+
+.day-nav-link.is-active .day-num {
+  box-shadow: 0 0 0 3px var(--panel), 0 0 0 5px
+    color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.phase-label {
+  margin: 1.5rem 0 0.5rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+}
+
+.upnext-chip,
+.locked-chip,
+.score-chip {
+  flex: none;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
 }
 
 /* ---------- Responsive visibility helpers ----------
