@@ -18,11 +18,17 @@ import { FormulaSheetButton } from '@/components/study/FormulaSheetDrawer'
 
 type Props = {
   currentDay: number
+  navOpen: boolean
   onToggleNav: () => void
   onOpenFormulas: () => void
 }
 
-export function Header({ currentDay, onToggleNav, onOpenFormulas }: Props) {
+export function Header({
+  currentDay,
+  navOpen,
+  onToggleNav,
+  onOpenFormulas,
+}: Props) {
   const {
     completedCount,
     state,
@@ -35,6 +41,7 @@ export function Header({ currentDay, onToggleNav, onOpenFormulas }: Props) {
   const xp = ready ? state.xp : 0
   const streak = ready ? state.streak : 0
   const dailyEarned = ready ? state.dailyXpEarned : 0
+  const dailyGoal = ready ? state.dailyGoalXp : 0
   const timeLabel = ready ? formattedTime : '0s'
   const pct = Math.round(
     ((ready ? completedCount : 0) / curriculum.totalDays) * 100,
@@ -44,100 +51,106 @@ export function Header({ currentDay, onToggleNav, onOpenFormulas }: Props) {
 
   return (
     <header className="topbar">
-      <div className="relative mx-auto flex max-w-7xl items-center gap-3 px-4 py-3">
+      <div className="topbar__inner">
         <button
           type="button"
           onClick={onToggleNav}
-          className="inline-flex min-h-11 min-w-11 items-center justify-center rounded-[10px] border border-[color:var(--line-strong)] bg-[color:var(--panel)] lg:hidden"
+          className="icon-btn topbar__menu hide-from-lg"
           aria-label="Open syllabus"
+          aria-haspopup="dialog"
+          aria-controls="syllabus-drawer"
+          aria-expanded={navOpen}
         >
           <Menu className="h-5 w-5" />
         </button>
 
-        <div className="min-w-0 flex-1">
-          <p className="brand-mark text-[1.35rem] text-[color:var(--ink)] sm:text-[1.55rem]">
-            Mastery C
-          </p>
-          <p className="mt-0.5 text-[0.68rem] font-semibold uppercase tracking-[0.15em] text-[color:var(--muted)]">
-            AP Physics C & Pre-Calc · 20-Day Plan
-          </p>
-        </div>
+        <Link href="/" className="topbar__brand">
+          <span className="brand-mark topbar__wordmark">Mastery C</span>
+          <span className="topbar__tagline">
+            AP Physics C &amp; Pre-Calc · 20-Day Plan
+          </span>
+        </Link>
 
-        <div className="flex flex-none flex-wrap items-center justify-end gap-2">
-          <span className="stat-chip" title="Progress">
+        <div className="topbar__stats">
+          <span className="stat-chip show-from-lg" title="Progress">
             <strong>Day {currentDay}</strong>
             <span aria-hidden>/</span>
             {curriculum.totalDays}
             <span className="text-[color:var(--accent)]">· {pct}%</span>
           </span>
-          <span className="stat-chip" title="XP and daily goal">
+          <span
+            className="stat-chip"
+            title={`${xp} XP · daily goal ${dailyEarned}/${dailyGoal}`}
+          >
             <Zap className="h-3.5 w-3.5 text-[color:var(--signal)]" />
             <strong suppressHydrationWarning>{xp}</strong>
-            <span className="hidden sm:inline">XP</span>
-            <span className="goal-bar hidden sm:inline-block" aria-hidden>
+            <span className="hidden lg:inline">XP</span>
+            <span className="goal-bar hidden lg:inline-block" aria-hidden>
               <span style={{ width: `${goalPct}%` }} />
             </span>
             <span className="hidden lg:inline text-[color:var(--muted)]">
-              {dailyEarned}/{state.dailyGoalXp}
+              <span suppressHydrationWarning>{dailyEarned}</span>/
+              <span suppressHydrationWarning>{dailyGoal}</span>
             </span>
           </span>
           <span className="stat-chip" title="Daily streak">
             <Flame className="h-3.5 w-3.5 text-[color:var(--signal)]" />
             <strong suppressHydrationWarning>{streak}</strong>
-            <span className="hidden md:inline">streak</span>
+            <span className="hidden lg:inline">streak</span>
           </span>
           {latestBadge && (
             <span
-              className="stat-chip hidden xl:inline-flex"
+              className="stat-chip show-from-xl"
               title={BADGE_META[latestBadge].description}
             >
               <Award className="h-3.5 w-3.5 text-[color:var(--accent)]" />
               {BADGE_META[latestBadge].title}
             </span>
           )}
-          <span className="stat-chip hidden md:inline-flex" title="Total time studied">
+          <span className="stat-chip show-from-lg" title="Total time studied">
             <Timer className="h-3.5 w-3.5 text-[color:var(--accent)]" />
             <strong suppressHydrationWarning>{timeLabel}</strong>
           </span>
+          {/* Formulas / Exam / Analytics move into the syllabus drawer below `md`. */}
           <FormulaSheetButton onClick={onOpenFormulas} />
           <Link
             href="/exam"
-            className="stat-chip"
+            className="stat-chip show-from-md"
             title="AP Exam Mode"
-            aria-label="Open exam mode"
           >
             <Timer className="h-3.5 w-3.5 text-[color:var(--signal)]" />
-            <span className="hidden sm:inline">Exam</span>
+            <span className="hidden lg:inline">Exam</span>
           </Link>
           <Link
             href="/analytics"
-            className="stat-chip"
+            className="stat-chip show-from-md"
             title="Learning analytics"
-            aria-label="Open analytics"
           >
             <BarChart3 className="h-3.5 w-3.5 text-[color:var(--accent)]" />
-            <span className="hidden sm:inline">Analytics</span>
+            <span className="hidden lg:inline">Analytics</span>
           </Link>
           <button
             type="button"
-            className="stat-chip"
-            onClick={() =>
-              setTheme(state.theme === 'dark' ? 'light' : 'dark')
+            className="stat-chip stat-chip--icon"
+            onClick={() => setTheme(state.theme === 'dark' ? 'light' : 'dark')}
+            aria-label={
+              ready && state.theme === 'dark'
+                ? 'Switch to light mode'
+                : 'Switch to dark mode'
             }
-            aria-label="Toggle dark mode"
             title="Toggle dark mode"
           >
             {ready && state.theme === 'dark' ? (
-              <Sun className="h-3.5 w-3.5" />
+              <Sun className="h-4 w-4" />
             ) : (
-              <Moon className="h-3.5 w-3.5" />
+              <Moon className="h-4 w-4" />
             )}
           </button>
         </div>
+      </div>
 
-        <div className="topbar__rail" aria-hidden>
-          <div className="topbar__rail-fill" style={{ width: `${pct}%` }} />
-        </div>
+      <div className="topbar__rail" aria-hidden>
+        <div className="topbar__rail-fill" style={{ width: `${pct}%` }} />
       </div>
     </header>
   )

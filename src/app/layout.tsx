@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { Fraunces, Source_Sans_3, Source_Serif_4 } from 'next/font/google'
+import Script from 'next/script'
 import { Providers } from '@/components/Providers'
 import './globals.css'
 import 'katex/dist/katex.min.css'
@@ -43,7 +44,12 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeBoot }} />
+        {/* Paints the stored theme before first paint, so there is no flash. */}
+        <Script
+          id="theme-boot"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: themeBoot }}
+        />
       </head>
       <body className="min-h-full antialiased">
         <Providers>{children}</Providers>

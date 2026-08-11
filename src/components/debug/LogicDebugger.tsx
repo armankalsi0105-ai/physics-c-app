@@ -11,6 +11,7 @@ import {
 } from 'lucide-react'
 import { MathText } from '@/components/MathInline'
 import { parseDebugSteps } from '@/lib/logicDebug'
+import { usePrefersReducedMotion } from '@/lib/usePrefersReducedMotion'
 
 type Props = {
   title: string
@@ -22,23 +23,17 @@ export function LogicDebugger({ title, steps }: Props) {
   const [i, setI] = useState(0)
   const [playing, setPlaying] = useState(false)
   const step = parsed[i]
+  // Autoplay stops at the last step; treating that as derived state keeps the
+  // effect to scheduling the tick instead of cascading a render.
+  const atEnd = i >= parsed.length - 1
+  const reducedMotion = usePrefersReducedMotion()
+  const isPlaying = playing && !atEnd && !reducedMotion
 
   useEffect(() => {
-    if (!playing) return
-    const reduce =
-      typeof window !== 'undefined' &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    if (reduce) {
-      setPlaying(false)
-      return
-    }
-    if (i >= parsed.length - 1) {
-      setPlaying(false)
-      return
-    }
+    if (!isPlaying) return
     const id = window.setTimeout(() => setI((x) => x + 1), 1600)
     return () => window.clearTimeout(id)
-  }, [playing, i, parsed.length])
+  }, [isPlaying, i])
 
   if (!step) return null
 
@@ -117,11 +112,21 @@ export function LogicDebugger({ title, steps }: Props) {
         <button
           type="button"
           className="btn-primary"
-          onClick={() => setPlaying((p) => !p)}
-          aria-label={playing ? 'Pause' : 'Auto play'}
+          disabled={reducedMotion}
+          title={
+            reducedMotion
+              ? 'Auto play is off while your system asks for reduced motion'
+              : undefined
+          }
+          onClick={() => {
+            // Pressing Auto on the last step replays from the top.
+            if (atEnd && !isPlaying) setI(0)
+            setPlaying((p) => !p || atEnd)
+          }}
+          aria-label={isPlaying ? 'Pause auto play' : 'Auto play'}
         >
-          {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-          {playing ? 'Pause' : 'Auto'}
+          {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+          {isPlaying ? 'Pause' : 'Auto'}
         </button>
         <button
           type="button"

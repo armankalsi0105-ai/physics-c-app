@@ -24,7 +24,7 @@ export function ProjectileSim() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [v0, setV0] = useState(20)
   const [angle, setAngle] = useState(45)
-  const [tMax, setTMax] = useState(4)
+  const [tMax] = useState(4)
   const [sonify, setSonify] = useState(false)
   const { setAudioEnabled, unlockHidden } = useProgress()
 

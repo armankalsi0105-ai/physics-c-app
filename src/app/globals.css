@@ -13,6 +13,7 @@
   --signal: #e8a066;
   --signal-soft: rgba(232, 160, 102, 0.16);
   --ok: #4ec9a8;
+  --ok-soft: rgba(78, 201, 168, 0.15);
   --formula-bg: #1a2830;
   --formula-ink: #9ee5df;
   --background: var(--paper);
@@ -29,7 +30,8 @@
 html[data-theme='light'] {
   --ink: #14202c;
   --ink-soft: #3a4d5e;
-  --muted: #677b8c;
+  /* Clears 4.5:1 on both --paper and --panel; #677b8c measured 4.27:1. */
+  --muted: #5a6c7d;
   --paper: #eef2f5;
   --panel: #fbfcfd;
   --line: #d9e1e8;
@@ -39,6 +41,7 @@ html[data-theme='light'] {
   --signal: #a34b12;
   --signal-soft: #f6e6d8;
   --ok: #1a6b5c;
+  --ok-soft: #eef8f4;
   --formula-bg: #e8f3f3;
   --formula-ink: #0d454a;
   --elevation: 0 1px 2px rgba(21, 32, 43, 0.04), 0 18px 40px rgba(21, 32, 43, 0.05);
@@ -98,6 +101,28 @@ sub { top: 0.15em; }
 
 ::selection {
   background: rgba(15, 92, 99, 0.18);
+}
+
+/* Keyboard users get to the lesson without tabbing the whole syllabus. */
+.skip-link {
+  position: fixed;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 100;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--accent);
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+  transform: translateY(-160%);
+  transition: transform 140ms ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
 
 /* ---------- Atmosphere ---------- */
@@ -227,6 +252,76 @@ html[data-theme='light'] .atmosphere {
   backdrop-filter: blur(14px);
 }
 
+.topbar__inner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0.5rem 0.75rem;
+}
+
+.topbar__menu {
+  flex: none;
+}
+
+/* Brand shrinks before the stats do, and never wraps. */
+.topbar__brand {
+  display: block;
+  min-width: 0;
+  flex: 1 1 auto;
+  color: inherit;
+  text-decoration: none;
+}
+
+.topbar__wordmark {
+  display: block;
+  overflow: hidden;
+  font-size: 1.25rem;
+  color: var(--ink);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.topbar__tagline {
+  display: none;
+  margin-top: 0.15rem;
+  overflow: hidden;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Stats keep their intrinsic width; the brand gives up space instead. */
+.topbar__stats {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.4rem;
+}
+
+@media (min-width: 640px) {
+  .topbar__inner {
+    gap: 0.75rem;
+    padding: 0.6rem 1rem;
+  }
+}
+
+/* The tagline only earns its second line once the bar has room to spare. */
+@media (min-width: 1024px) {
+  .topbar__wordmark {
+    font-size: 1.55rem;
+  }
+  .topbar__tagline {
+    display: block;
+  }
+}
+
 .topbar__rail {
   position: absolute;
   left: 0;
@@ -267,6 +362,22 @@ html[data-theme='light'] .atmosphere {
 .stat-chip strong {
   color: var(--ink);
   font-weight: 700;
+}
+
+/* Square-ish tap target for chips that are icon-only at every width. */
+.stat-chip--icon {
+  min-width: 2.35rem;
+  justify-content: center;
+  padding: 0 0.6rem;
+  cursor: pointer;
+}
+
+@media (max-width: 639px) {
+  .stat-chip {
+    min-height: 2.2rem;
+    padding: 0 0.6rem;
+    gap: 0.3rem;
+  }
 }
 
 .sidebar-panel {
@@ -318,7 +429,7 @@ html[data-theme='light'] .atmosphere {
 
 .day-nav-link.is-active .day-num {
   background: var(--accent);
-  color: #fff;
+  color: var(--paper);
   border-color: var(--accent);
 }
 
@@ -468,7 +579,7 @@ html[data-theme='light'] .atmosphere {
 
 .hero-chip--plain {
   border: 1px solid var(--line);
-  background: #fff;
+  background: var(--panel);
   color: var(--ink-soft);
 }
 
@@ -499,7 +610,9 @@ html[data-theme='light'] .atmosphere {
   justify-content: center;
   border-radius: 8px;
   background: var(--ink);
-  color: #f7f4ed;
+  /* Must invert with the theme: a fixed light ink is invisible on the light
+     `--ink` chip that dark mode produces. */
+  color: var(--paper);
   font-family: var(--font-display), Georgia, serif;
   font-size: 0.9rem;
   font-weight: 700;
@@ -713,7 +826,7 @@ html[data-theme='light'] .atmosphere {
   overflow: hidden;
   border: 1px solid rgba(15, 92, 99, 0.28);
   border-radius: 14px;
-  background: #fff;
+  background: var(--panel);
   box-shadow: 0 10px 28px rgba(20, 32, 44, 0.06);
 }
 
@@ -735,7 +848,7 @@ html[data-theme='light'] .atmosphere {
   justify-content: center;
   border-radius: 9px;
   background: var(--accent);
-  color: #fff;
+  color: var(--paper);
 }
 
 .worked-example__header p {
@@ -791,7 +904,7 @@ html[data-theme='light'] .atmosphere {
   padding: 1rem 1.1rem;
   border-radius: 12px;
   border: 1px solid var(--line);
-  background: #fff;
+  background: var(--panel);
 }
 
 .panel--derive { border-left: 3px solid var(--signal); }
@@ -882,7 +995,7 @@ html[data-theme='light'] .atmosphere {
 .procedure-step--result .procedure-step__number {
   border-color: var(--accent);
   background: var(--accent);
-  color: #fff;
+  color: var(--paper);
 }
 
 .procedure-step--result .procedure-step__action {
@@ -909,7 +1022,7 @@ html[data-theme='light'] .atmosphere {
   padding: 1rem 1.1rem;
   border: 1px dashed var(--line-strong);
   border-radius: 12px;
-  background: #fff;
+  background: var(--panel);
   color: var(--ink-soft);
 }
 
@@ -925,14 +1038,14 @@ html[data-theme='light'] .atmosphere {
   border-style: solid;
   border-color: rgba(163, 75, 18, 0.28);
   background: var(--signal-soft);
-  color: #7a3410;
+  color: var(--signal);
 }
 
 .video-item {
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 12px;
-  background: #fff;
+  background: var(--panel);
 }
 
 .video-item__meta {
@@ -1105,14 +1218,14 @@ html[data-theme='light'] .atmosphere {
 
 .feedback--good {
   border-color: rgba(26, 107, 92, 0.3);
-  background: #eef8f4;
-  color: #1a453c;
+  background: var(--ok-soft);
+  color: var(--ok);
 }
 
 .feedback--bad {
   border-color: rgba(163, 75, 18, 0.3);
   background: var(--signal-soft);
-  color: #7a3410;
+  color: var(--signal);
 }
 
 .feedback-title {
@@ -1142,7 +1255,8 @@ html[data-theme='light'] .atmosphere {
   margin-top: 0.35rem;
   padding: 0.65rem 0.75rem;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.62);
+  /* Translucent lift off the formula block, in whichever direction the theme goes. */
+  background: color-mix(in srgb, var(--panel) 62%, transparent);
   color: var(--formula-ink);
   font-family: var(--math-font);
   font-size: 1.02rem;
@@ -1236,24 +1350,28 @@ html[data-theme='light'] .atmosphere {
   transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
 }
 
+/* Both of these paint on `--ink`/`--panel`, which invert with the theme, so
+   their text has to invert too — fixed near-white ink went white-on-white in
+   dark mode and made these buttons unreadable. */
 .btn-primary {
   min-height: 2.7rem;
   padding: 0 1.1rem;
   border: 1px solid var(--ink);
   background: var(--ink);
-  color: #f7f4ed;
+  color: var(--paper);
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  background: #243447;
+  background: var(--ink-soft);
+  border-color: var(--ink-soft);
 }
 
 .btn-ghost {
   min-height: 2.7rem;
   padding: 0 1.05rem;
   border: 1px solid var(--line-strong);
-  background: #fff;
+  background: var(--panel);
   color: var(--ink);
 }
 
@@ -1264,13 +1382,13 @@ html[data-theme='light'] .atmosphere {
   padding: 0 1.25rem;
   border: 1px solid var(--signal);
   background: var(--signal);
-  color: #fff8f3;
+  color: var(--paper);
   font-weight: 800;
 }
 
 .btn-signal:hover:not(:disabled) {
   transform: translateY(-1px);
-  background: #8d4010;
+  filter: brightness(0.93);
 }
 
 .btn-primary:disabled,
@@ -1720,44 +1838,6 @@ html[data-theme='dark'] .katex { color: var(--ink); }
 }
 
 /* ---------- Teacher–student coaching ---------- */
-
-.study-path {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.25rem 0.15rem;
-  margin: 0 0 1.1rem;
-  padding: 0.55rem 0.65rem;
-  list-style: none;
-  border-radius: 10px;
-  background: color-mix(in srgb, var(--accent-soft) 45%, var(--panel));
-  border: 1px solid var(--line);
-}
-
-.study-path li {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.1rem 0.35rem;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.03em;
-  text-transform: uppercase;
-  color: var(--ink-soft);
-  background: transparent;
-  border: none;
-  border-radius: 0;
-  min-height: auto;
-}
-
-.study-path li:not(:last-child)::after {
-  content: '→';
-  margin-left: 0.4rem;
-  color: var(--muted);
-  font-weight: 400;
-  text-transform: none;
-  letter-spacing: 0;
-  opacity: 0.7;
-}
 
 .section-coach {
   margin: 0 0 0.85rem;
@@ -2218,43 +2298,6 @@ html[data-theme='dark'] .real-world__try {
   letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--accent);
-}
-
-.day-jump {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.35rem;
-  margin: -0.35rem 0 1.35rem;
-  padding-bottom: 0.85rem;
-  border-bottom: 1px solid var(--line);
-  position: sticky;
-  top: 3.6rem;
-  z-index: 12;
-  background: color-mix(in srgb, var(--panel) 92%, transparent);
-  backdrop-filter: blur(10px);
-}
-
-.day-jump a {
-  display: inline-flex;
-  min-height: 2rem;
-  align-items: center;
-  padding: 0 0.65rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  font-size: 0.72rem;
-  font-weight: 700;
-  color: var(--ink-soft);
-  text-decoration: none;
-}
-
-.day-jump a:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.day-jump__alert {
-  border-color: color-mix(in srgb, var(--signal) 45%, var(--line)) !important;
-  color: var(--signal) !important;
 }
 
 .notes-head {
@@ -2776,8 +2819,8 @@ html {
 
 .mastery-badge--unstarted { color: var(--muted); background: var(--paper); }
 .mastery-badge--practiced { color: var(--accent); background: var(--accent-soft); border-color: rgba(15,92,99,0.25); }
-.mastery-badge--level1 { color: #8a4b12; background: var(--signal-soft); border-color: rgba(163,75,18,0.3); }
-.mastery-badge--mastered { color: #fff; background: var(--accent); border-color: var(--accent); }
+.mastery-badge--level1 { color: var(--signal); background: var(--signal-soft); border-color: rgba(163,75,18,0.3); }
+.mastery-badge--mastered { color: var(--paper); background: var(--accent); border-color: var(--accent); }
 
 /* ---------- Learn mode ---------- */
 
@@ -2996,7 +3039,8 @@ html {
 .kg-node__day {
   font-size: 0.62rem;
   font-weight: 700;
-  color: var(--muted);
+  /* --muted lands at 4.45:1 on the active node's tinted fill; --ink-soft clears AA. */
+  color: var(--ink-soft);
 }
 
 .kg-weak {
@@ -3666,4 +3710,637 @@ html {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--signal);
+}
+
+
+/* ---------- Depth & rhythm pass ----------
+ *
+ * The surfaces used to be a single flat tone with hairline borders, so the
+ * page read as one undifferentiated sheet. These rules give it three levels —
+ * page, card, inset — and let the accent carry the eye through the lesson.
+ */
+
+:root {
+  --shadow-sm: 0 1px 2px rgba(4, 10, 16, 0.28);
+  --shadow-md: 0 2px 6px rgba(4, 10, 16, 0.3), 0 12px 28px rgba(4, 10, 16, 0.28);
+  --shadow-lg: 0 4px 10px rgba(4, 10, 16, 0.32), 0 28px 60px rgba(4, 10, 16, 0.36);
+  --ring-accent: 0 0 0 1px color-mix(in srgb, var(--accent) 32%, transparent);
+}
+
+html[data-theme='light'] {
+  --shadow-sm: 0 1px 2px rgba(21, 32, 43, 0.05);
+  --shadow-md: 0 1px 2px rgba(21, 32, 43, 0.05), 0 10px 24px rgba(21, 32, 43, 0.07);
+  --shadow-lg: 0 2px 4px rgba(21, 32, 43, 0.06), 0 24px 56px rgba(21, 32, 43, 0.1);
+}
+
+.day-view {
+  max-width: 46rem;
+  padding: 1.75rem 1.75rem 4rem;
+  border-radius: 22px;
+  box-shadow: var(--shadow-lg);
+}
+
+/* ---- Hero ---- */
+
+.day-hero {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+}
+
+/* Sit the watermark behind the title instead of letting it clip on the edge. */
+.day-hero__numeral {
+  top: 50%;
+  right: 0;
+  font-size: clamp(4.5rem, 12vw, 7.5rem);
+  letter-spacing: -0.05em;
+  color: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+
+.day-hero__kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.18em;
+}
+
+.day-hero__kicker::before {
+  content: '';
+  width: 1.6rem;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
+}
+
+.day-hero h1 {
+  margin-top: 0.7rem;
+  max-width: 20ch;
+  font-size: clamp(1.8rem, 4.4vw, 2.6rem);
+  line-height: 1.08;
+}
+
+.hero-chips {
+  margin-top: 1.15rem;
+  gap: 0.4rem;
+}
+
+.hero-chip {
+  min-height: 1.95rem;
+  padding: 0 0.7rem;
+  letter-spacing: 0.01em;
+}
+
+.hero-chip--status-done {
+  box-shadow: var(--ring-accent);
+}
+
+@media (max-width: 639px) {
+  .day-view {
+    padding: 1.25rem 1.1rem 3rem;
+    border-radius: 16px;
+  }
+  /* The title fills the card at this width, so the watermark would sit on
+     top of the words rather than behind empty space. */
+  .day-hero__numeral {
+    display: none;
+  }
+  .day-hero h1 {
+    max-width: none;
+  }
+}
+
+/* ---- Lesson arc nav ---- */
+
+.arc-nav {
+  position: sticky;
+  top: 3.9rem;
+  z-index: 12;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 -0.35rem 1.75rem;
+  padding: 0.55rem 0.35rem;
+  background: color-mix(in srgb, var(--panel) 88%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+}
+
+.arc-nav__list {
+  display: flex;
+  flex: 1 1 auto;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0.15rem;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.arc-nav__list::-webkit-scrollbar {
+  display: none;
+}
+
+/* Signals that more steps exist past the right edge on narrow screens. */
+.arc-nav__list {
+  -webkit-mask-image: linear-gradient(90deg, #000 calc(100% - 2rem), transparent);
+  mask-image: linear-gradient(90deg, #000 calc(100% - 2rem), transparent);
+}
+
+@media (min-width: 1024px) {
+  .arc-nav__list {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+}
+
+.arc-nav__list li {
+  flex: none;
+}
+
+.arc-nav a {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 2.1rem;
+  padding: 0 0.75rem 0 0.45rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  white-space: nowrap;
+  color: var(--ink-soft);
+  text-decoration: none;
+  transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+
+.arc-nav a:hover {
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+/* The step number is what turns a flat pill row into a visible sequence. */
+.arc-nav__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  flex: none;
+  border-radius: 999px;
+  background: var(--paper);
+  box-shadow: inset 0 0 0 1px var(--line);
+  font-size: 0.66rem;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.arc-nav a:hover .arc-nav__num {
+  background: var(--accent);
+  box-shadow: none;
+  color: var(--paper);
+}
+
+.arc-nav__alert {
+  flex: none;
+  border-color: color-mix(in srgb, var(--signal) 45%, var(--line)) !important;
+  background: var(--signal-soft);
+  color: var(--signal) !important;
+}
+
+/* ---- Section headings ---- */
+
+.section-block {
+  margin-bottom: 3rem;
+}
+
+.section-head {
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.6rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.section-head__num {
+  height: 2rem;
+  width: 2rem;
+  border-radius: 10px;
+  box-shadow: var(--shadow-sm);
+}
+
+/* ---- Sidebar cards ---- */
+
+.sidebar-dash,
+.quest-card,
+.calc-panel,
+.backup-row {
+  box-shadow: var(--shadow-sm);
+}
+
+/* Quests read as rows, not as a label fighting a two-line button. */
+.quest-card li {
+  flex-wrap: wrap;
+  gap: 0.35rem 0.6rem;
+  padding: 0.6rem 0;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.quest-card li > span:first-child {
+  flex: 1 1 9rem;
+  min-width: 0;
+}
+
+.quest-card li em {
+  display: inline-block;
+  margin-left: 0.15rem;
+  padding: 0 0.35rem;
+  border-radius: 999px;
+  background: var(--paper);
+  font-size: 0.7rem;
+  font-style: normal;
+  font-weight: 800;
+  color: var(--muted);
+}
+
+.quest-card li .btn-ghost {
+  flex: none;
+  margin-left: auto;
+  min-height: 1.9rem;
+  padding: 0 0.7rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+}
+
+.quest-card li .btn-ghost:not(:disabled) {
+  border-color: color-mix(in srgb, var(--accent) 45%, var(--line));
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.quest-card li .btn-ghost:disabled {
+  opacity: 0.45;
+}
+
+/* ---- Syllabus list ---- */
+
+.day-nav-link.is-active {
+  box-shadow: var(--ring-accent);
+}
+
+.day-nav-link.is-locked {
+  opacity: 1;
+}
+
+.day-nav-link.is-locked .day-num--locked,
+.day-nav-link.is-locked span {
+  color: var(--muted);
+}
+
+
+/* ---------- Reading & callout pass ----------
+ *
+ * Second design pass: the body copy was set at 1.78 leading, which reads airy
+ * and slow for lesson text, and several callouts carried gradients that were
+ * written for the light theme only.
+ */
+
+/* The guided-example banner faded to a hardcoded near-white, which put white
+   heading text on a white field in dark mode. */
+.worked-example__header {
+  background: linear-gradient(
+    110deg,
+    color-mix(in srgb, var(--accent) 22%, var(--panel)),
+    var(--panel) 78%
+  );
+  border-bottom-color: color-mix(in srgb, var(--accent) 26%, var(--line));
+}
+
+.worked-example {
+  border-color: color-mix(in srgb, var(--accent) 24%, var(--line));
+  border-radius: 16px;
+  box-shadow: var(--shadow-sm);
+}
+
+.worked-example__header h4,
+.worked-example__header h3 {
+  color: var(--ink);
+}
+
+/* ---- Reading rhythm ---- */
+
+.prose-p {
+  margin-bottom: 1.05rem;
+  max-width: 66ch;
+  line-height: 1.62;
+}
+
+/* The opening paragraph of a section should carry more weight than body copy. */
+.lead .prose-p,
+p.lead {
+  max-width: 60ch;
+  font-size: 1.1rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+/* Labels like WATCH / EXPLORE / PRACTICE were floating unanchored. */
+.subhead {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 2rem 0 0.75rem;
+  font-size: 0.66rem;
+  letter-spacing: 0.16em;
+  color: var(--muted);
+}
+
+.subhead::after {
+  content: '';
+  flex: 1 1 auto;
+  height: 1px;
+  background: var(--line);
+}
+
+/* ---- Callouts ---- */
+
+.real-world,
+.coach-card,
+.myth-panel,
+.bridge-card,
+.teachback,
+.confidence {
+  box-shadow: var(--shadow-sm);
+}
+
+.coach-aside {
+  border-radius: 12px;
+}
+
+/* ---- Hero → content spacing ---- */
+
+.day-hero {
+  padding-bottom: 1.35rem;
+  margin-bottom: 1.5rem;
+}
+
+.kg-panel {
+  margin-bottom: 1.25rem;
+}
+
+
+/* ==========================================================================
+   Bold editorial pass
+   Arriving at a day should read like opening a chapter: a full-bleed header
+   band carries the number, title and progress, a connected rail shows the
+   seven steps, and section markers are set as display numerals.
+   ========================================================================== */
+
+.day-view {
+  max-width: 48rem;
+  padding: 0 0 4.5rem;
+  overflow: hidden;
+}
+
+/* ---- Chapter band ---- */
+
+.day-hero {
+  position: relative;
+  margin: 0 0 1.5rem;
+  padding: 2.25rem 2.25rem 2rem;
+  border: 0;
+  border-bottom: 1px solid var(--line);
+  overflow: hidden;
+  background:
+    radial-gradient(
+      120% 140% at 100% 0%,
+      color-mix(in srgb, var(--accent) 26%, transparent) 0%,
+      transparent 62%
+    ),
+    linear-gradient(
+      152deg,
+      color-mix(in srgb, var(--accent) 13%, var(--panel)) 0%,
+      var(--panel) 68%
+    );
+}
+
+/* Cropped along the bottom edge on purpose; keep it clear of the right edge
+   so it never looks like a glyph that simply ran out of room. */
+.day-hero__numeral {
+  top: auto;
+  bottom: -1.9rem;
+  right: 1.75rem;
+  transform: none;
+  font-size: clamp(6.5rem, 13vw, 10.5rem);
+  font-weight: 800;
+  letter-spacing: -0.06em;
+  line-height: 0.8;
+  color: color-mix(in srgb, var(--accent) 14%, transparent);
+}
+
+.day-hero__top {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.day-hero__kicker {
+  gap: 0.55rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.24em;
+  color: var(--accent);
+}
+
+.day-hero__kicker::before {
+  width: 2rem;
+  height: 2px;
+}
+
+.day-hero__ring {
+  flex: none;
+}
+
+.day-hero h1 {
+  position: relative;
+  margin: 1rem 0 0;
+  max-width: 17ch;
+  font-size: clamp(2.1rem, 5.4vw, 3.35rem);
+  font-weight: 800;
+  letter-spacing: -0.035em;
+  line-height: 1.02;
+}
+
+.day-hero__meta {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1.15rem 0 0;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.day-hero__meta > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.day-hero__meta .is-done {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.day-hero__meta .is-open {
+  color: var(--signal);
+  font-weight: 700;
+}
+
+.hero-chips {
+  position: relative;
+  margin-top: 1.15rem;
+}
+
+/* ---- Body gutter ----
+   The band bleeds to the card edge, so everything after it needs its own
+   horizontal padding rather than inheriting it from .day-view. */
+
+.day-view > *:not(.day-hero) {
+  padding-left: 2.25rem;
+  padding-right: 2.25rem;
+}
+
+/* ---- Connected step rail ---- */
+
+.arc-nav {
+  top: 3.9rem;
+  margin: 0 0 2.25rem;
+  padding-top: 0.6rem;
+  padding-bottom: 0.6rem;
+}
+
+.arc-nav__list {
+  gap: 0;
+}
+
+/* Hairline through the numerals turns seven pills into one sequence. */
+.arc-nav__list li {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.arc-nav__list li:not(:last-child)::after {
+  content: '';
+  width: 0.85rem;
+  height: 1px;
+  flex: none;
+  background: var(--line);
+}
+
+.arc-nav a {
+  padding: 0 0.5rem 0 0.3rem;
+}
+
+.arc-nav__num {
+  width: 1.55rem;
+  height: 1.55rem;
+  background: var(--panel);
+  box-shadow: inset 0 0 0 1.5px var(--line);
+  font-size: 0.68rem;
+}
+
+/* ---- Section markers ---- */
+
+.section-block {
+  margin-bottom: 3.5rem;
+}
+
+.section-head {
+  align-items: baseline;
+  gap: 0.85rem;
+  margin-bottom: 1.1rem;
+  padding-bottom: 0.7rem;
+  border-bottom: 2px solid var(--ink);
+}
+
+.section-head__num {
+  width: auto;
+  height: auto;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+}
+
+.section-head h2 {
+  flex: 1 1 auto;
+  font-size: clamp(1.25rem, 2.6vw, 1.6rem);
+  letter-spacing: -0.02em;
+}
+
+.section-head__time {
+  flex: none;
+}
+
+@media (max-width: 639px) {
+  .day-hero {
+    padding: 1.6rem 1.15rem 1.5rem;
+  }
+  .day-view > *:not(.day-hero) {
+    padding-left: 1.15rem;
+    padding-right: 1.15rem;
+  }
+  .day-hero__numeral {
+    display: block;
+    bottom: -1.8rem;
+    font-size: 7rem;
+  }
+  .day-hero h1 {
+    max-width: none;
+  }
+  .section-head__num {
+    font-size: 1.5rem;
+  }
+}
+
+/* ---------- Responsive visibility helpers ----------
+ *
+ * Tailwind is imported at the top of this file, so its display utilities
+ * (`hidden`, `lg:hidden`, …) carry the same specificity as the component
+ * classes above and lose on source order. Elements wearing a class from this
+ * file must therefore express responsive visibility with these helpers, which
+ * live at the very end so they win. Plain elements can keep using Tailwind.
+ */
+
+.show-from-sm,
+.show-from-md,
+.show-from-lg,
+.show-from-xl {
+  display: none;
+}
+
+@media (min-width: 640px) {
+  .show-from-sm { display: inline-flex; }
+}
+
+@media (min-width: 768px) {
+  .show-from-md { display: inline-flex; }
+}
+
+@media (min-width: 1024px) {
+  .show-from-lg { display: inline-flex; }
+  .hide-from-lg { display: none; }
+}
+
+@media (min-width: 1280px) {
+  .show-from-xl { display: inline-flex; }
 }

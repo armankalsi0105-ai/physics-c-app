@@ -12,19 +12,24 @@ import { useProgress } from '@/context/ProgressContext'
 import { allFrqs } from '@/data/frqs'
 import { curriculum } from '@/lib/curriculum'
 import { predictedApScore } from '@/lib/frq/ecf'
+import { seededShuffle } from '@/lib/shuffle'
 import { maxUnlockedDay, todayKey } from '@/lib/storage'
 import type { Problem } from '@/lib/types'
 
 const EXAM_SECONDS = 45 * 60
 
-function pickMcqs(unlocked: number, n: number): Problem[] {
+/**
+ * Draws the paper from every unlocked day. Seeded on the attempt number rather
+ * than `Math.random()` so the server and the client agree during hydration —
+ * each new attempt still gets a different set of questions.
+ */
+function pickMcqs(unlocked: number, n: number, attempt: number): Problem[] {
   const pool: Problem[] = []
   for (const day of curriculum.days) {
     if (day.day > unlocked) continue
     pool.push(...day.review.quiz)
   }
-  const shuffled = [...pool].sort(() => Math.random() - 0.5)
-  return shuffled.slice(0, n)
+  return seededShuffle(pool, attempt * 31 + unlocked).slice(0, n)
 }
 
 export function ExamMode() {
@@ -35,7 +40,14 @@ export function ExamMode() {
     return list[list.length - 1] ?? allFrqs()[0]
   }, [unlocked])
 
-  const [mcqs] = useState(() => pickMcqs(unlocked, 5))
+  // Derived, not captured in state: `unlocked` is 1 until the store hydrates,
+  // and a `useState` initialiser would have frozen the paper to day 1 only.
+  const attempt = ready ? state.examHistory.length : 0
+  const mcqs = useMemo(
+    () => pickMcqs(unlocked, 5, attempt),
+    [unlocked, attempt],
+  )
+
   const [mcAnswers, setMcAnswers] = useState<Record<string, string>>({})
   const [left, setLeft] = useState(EXAM_SECONDS)
   const [calcOpen, setCalcOpen] = useState(false)
@@ -43,7 +55,6 @@ export function ExamMode() {
   const [frqMethod, setFrqMethod] = useState(0)
   const [frqMax, setFrqMax] = useState(0)
   const [done, setDone] = useState(false)
-  const [started] = useState(Date.now())
 
   useEffect(() => {
     if (done) return
@@ -71,7 +82,7 @@ export function ExamMode() {
       frqMax || 1,
     )
     recordExam({
-      id: `exam-${Date.now()}`,
+      id: `exam-${todayKey()}-${attempt + 1}`,
       completedAt: todayKey(),
       mcCorrect,
       mcTotal: mcqs.length,
@@ -79,7 +90,7 @@ export function ExamMode() {
       frqMax: frqMax || 1,
       methodPoints: frqMethod,
       predictedScore: predicted,
-      secondsUsed: Math.round((Date.now() - started) / 1000),
+      secondsUsed: EXAM_SECONDS - left,
     })
     setDone(true)
   }

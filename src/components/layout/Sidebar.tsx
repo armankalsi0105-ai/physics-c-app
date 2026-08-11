@@ -1,10 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import { Check, Lock } from 'lucide-react'
+import { useRef } from 'react'
+import { BarChart3, BookOpen, Check, Lock, Timer, X } from 'lucide-react'
 import { useProgress } from '@/context/ProgressContext'
 import { curriculum } from '@/lib/curriculum'
 import { maxUnlockedDay } from '@/lib/storage'
+import { useDialog } from '@/lib/useDialog'
 import { SciCalculator } from '@/components/study/SciCalculator'
 import { ProgressBackup } from '@/components/study/ProgressBackup'
 import { QuestCard } from '@/components/study/QuestCard'
@@ -24,11 +26,21 @@ type Props = {
   currentDay: number
   open: boolean
   onClose: () => void
+  onOpenFormulas: () => void
+  isDesktop: boolean
 }
 
-export function Sidebar({ currentDay, open, onClose }: Props) {
+export function Sidebar({
+  currentDay,
+  open,
+  onClose,
+  onOpenFormulas,
+  isDesktop,
+}: Props) {
   const { state, ready, dayStatus, dueSrsItems, dailyGoalProgress } =
     useProgress()
+  const panelRef = useRef<HTMLElement>(null)
+  useDialog(open, onClose, panelRef)
   const completedDays = ready ? state.completedDays : []
   const unlocked = ready ? maxUnlockedDay(state) : 1
   const upNext = unlocked
@@ -49,10 +61,53 @@ export function Sidebar({ currentDay, open, onClose }: Props) {
       />
 
       <aside
+        ref={panelRef}
+        id="syllabus-drawer"
+        aria-label="Syllabus and study tools"
+        role={isDesktop ? undefined : 'dialog'}
+        aria-modal={isDesktop ? undefined : open}
+        // Off-canvas but still painted: keep it out of the tab order when shut.
+        inert={!isDesktop && !open}
         className={`sidebar-panel fixed inset-y-0 left-0 z-50 w-[min(20rem,92vw)] overflow-y-auto px-3 py-4 transition-transform lg:sticky lg:top-[4.2rem] lg:z-0 lg:h-[calc(100vh-4.2rem)] lg:w-auto lg:translate-x-0 lg:px-0 lg:py-4 ${
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
+        {/* Mobile-only: header hides these actions below `md`, so surface them here. */}
+        <div className="mb-3 flex items-center gap-2 lg:hidden">
+          <button
+            type="button"
+            className="stat-chip flex-1 justify-center"
+            onClick={onOpenFormulas}
+          >
+            <BookOpen className="h-3.5 w-3.5 text-[color:var(--accent)]" />
+            Formulas
+          </button>
+          <Link
+            href="/exam"
+            className="stat-chip flex-1 justify-center"
+            onClick={onClose}
+          >
+            <Timer className="h-3.5 w-3.5 text-[color:var(--signal)]" />
+            Exam
+          </Link>
+          <Link
+            href="/analytics"
+            className="stat-chip flex-1 justify-center"
+            onClick={onClose}
+          >
+            <BarChart3 className="h-3.5 w-3.5 text-[color:var(--accent)]" />
+            Stats
+          </Link>
+          <button
+            type="button"
+            className="icon-btn flex-none"
+            onClick={onClose}
+            aria-label="Close syllabus"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+
         <div className="sidebar-dash">
           <p className="phase-label" style={{ marginTop: 0 }}>
             Today&apos;s goal

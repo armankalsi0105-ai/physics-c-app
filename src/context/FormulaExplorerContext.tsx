@@ -45,7 +45,7 @@ export function useFormulaExplorer() {
     return {
       open: false,
       query: '',
-      openExplorer: (_q?: string) => {},
+      openExplorer: () => {},
       closeExplorer: () => {},
     }
   }

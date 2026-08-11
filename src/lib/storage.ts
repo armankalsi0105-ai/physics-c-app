@@ -269,7 +269,8 @@ export function saveProgress(state: ProgressState) {
 }
 
 export function exportProgressJson(state: ProgressState): string {
-  const { sessionStartedAt: _, ...rest } = state
+  // The in-flight session clock is device state, not progress worth exporting.
+  const { sessionStartedAt: _sessionStartedAt, ...rest } = state
   return JSON.stringify(
     {
       version: 2,

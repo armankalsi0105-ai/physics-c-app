@@ -40,7 +40,7 @@ function tokenizeEval(expr: string): number | null {
       .replace(/\blog\b/g, 'Math.log10')
       .replace(/\bsqrt\b/g, 'Math.sqrt')
 
-    // eslint-disable-next-line no-new-func
+     
     const result = Function(`"use strict"; return (${s})`)()
     return typeof result === 'number' && Number.isFinite(result) ? result : null
   } catch {

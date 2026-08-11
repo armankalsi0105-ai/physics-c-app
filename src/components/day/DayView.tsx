@@ -1,6 +1,6 @@
 'use client'
 
-import { lazy, Suspense, useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import {
@@ -27,6 +27,7 @@ import { KnowledgeGraphPanel } from '@/components/study/KnowledgeGraphPanel'
 import { SandboxHost } from '@/components/sims/SandboxHost'
 import { BossBattle } from '@/components/practice/BossBattle'
 import { HighlightNotebook } from '@/components/notebook/HighlightNotebook'
+import { ProgressRing } from '@/components/ui/ProgressRing'
 import { getTodaysFocusChip } from '@/lib/adaptive'
 import { useFormulaExplorer } from '@/context/FormulaExplorerContext'
 import {
@@ -39,11 +40,10 @@ import {
   RealWorldPanel,
   ReflectionPrompts,
   ConnectBack,
-  StudyPath,
   TeachBack,
 } from '@/components/study/CoachPanels'
 import { useProgress } from '@/context/ProgressContext'
-import { getDay } from '@/lib/curriculum'
+import { curriculum, getDay } from '@/lib/curriculum'
 import { getDayStatus } from '@/lib/storage'
 import type { DayContent } from '@/lib/types'
 
@@ -74,6 +74,7 @@ export function DayView({ day }: { day: DayContent }) {
   const { completeDay, setActiveDay, setNote, state, dueSrsItems } =
     useProgress()
   const completed = state.completedDays.includes(day.day)
+  const completedCount = state.completedDays.length
   const note = state.notes[String(day.day)] ?? ''
   const prev = getDay(day.day - 1)
   const next = getDay(day.day + 1)
@@ -87,61 +88,96 @@ export function DayView({ day }: { day: DayContent }) {
     setActiveDay(day.day)
   }, [day.day, setActiveDay])
 
-  useEffect(() => {
-    if (!note) return
+  // The flash is a response to the user typing, not to `note` changing — driving
+  // it from the change handler keeps it out of an effect and off the render path.
+  const flashTimer = useRef<number | undefined>(undefined)
+  useEffect(() => () => window.clearTimeout(flashTimer.current), [])
+
+  const onNoteChange = (value: string) => {
+    setNote(day.day, value)
     setSavedFlash(true)
-    const id = window.setTimeout(() => setSavedFlash(false), 900)
-    return () => window.clearTimeout(id)
-  }, [note])
+    window.clearTimeout(flashTimer.current)
+    flashTimer.current = window.setTimeout(() => setSavedFlash(false), 900)
+  }
 
   return (
     <article className="day-view">
+      {/* Full-bleed editorial band: arriving at a day should feel like opening
+          a chapter, so the number, title and progress get the top of the page. */}
       <header className="day-hero">
         <span className="day-hero__numeral" aria-hidden>
           {String(day.day).padStart(2, '0')}
         </span>
-        <p className="day-hero__kicker">Day {day.day} of 20</p>
+
+        <div className="day-hero__top">
+          <p className="day-hero__kicker">
+            Day {String(day.day).padStart(2, '0')}{' '}
+            <span aria-hidden>/</span> {curriculum.totalDays}
+          </p>
+          <ProgressRing
+            value={completedCount}
+            max={curriculum.totalDays}
+            size={54}
+            stroke={4}
+            label={`${completedCount} of ${curriculum.totalDays} days complete`}
+            className="day-hero__ring"
+          />
+        </div>
+
         <h1>
           <MathText text={day.title} />
         </h1>
+
+        <p className="day-hero__meta">
+          <span>~95 min</span>
+          <span aria-hidden>·</span>
+          <span>{JUMP.length} sections</span>
+          <span aria-hidden>·</span>
+          <span className={completed ? 'is-done' : 'is-open'}>
+            {completed ? (
+              <>
+                <CheckCircle2 className="h-3.5 w-3.5" />
+                Completed
+                {typeof state.quizScores[String(day.day)] === 'number' &&
+                  ` · quiz ${state.quizScores[String(day.day)]}/3`}
+              </>
+            ) : (
+              <>
+                <CircleDot className="h-3.5 w-3.5" />
+                In progress
+              </>
+            )}
+          </span>
+        </p>
+
         <div className="hero-chips">
           <MasteryBadge day={day.day} state={state} />
           <span className="hero-chip hero-chip--focus">
             <Target className="h-3.5 w-3.5" />
             {focusChip.text}
           </span>
-          {completed ? (
-            <span className="hero-chip hero-chip--status-done">
-              <CheckCircle2 className="h-3.5 w-3.5" />
-              Completed
-              {typeof state.quizScores[String(day.day)] === 'number' &&
-                ` · quiz ${state.quizScores[String(day.day)]}/3`}
-            </span>
-          ) : (
-            <span className="hero-chip hero-chip--status-open">
-              <CircleDot className="h-3.5 w-3.5" />
-              In progress
-            </span>
-          )}
-          <span className="hero-chip hero-chip--plain">
-            <Clock3 className="h-3.5 w-3.5" />
-            ~95 min
-          </span>
         </div>
       </header>
 
-      <StudyPath />
-
       <KnowledgeGraphPanel day={day.day} />
 
-      <nav className="day-jump" aria-label="Jump to section">
-        {JUMP.map((j) => (
-          <a key={j.id} href={`#${j.id}`}>
-            {j.label}
-          </a>
-        ))}
+      {/* One numbered arc replaces the old static StudyPath strip plus a
+          separate pill row — same sequence, but every step is a jump link. */}
+      <nav className="arc-nav" aria-label="Lesson sections">
+        <ol className="arc-nav__list">
+          {JUMP.map((j, i) => (
+            <li key={j.id}>
+              <a href={`#${j.id}`}>
+                <span className="arc-nav__num" aria-hidden>
+                  {i + 1}
+                </span>
+                {j.label}
+              </a>
+            </li>
+          ))}
+        </ol>
         {dueSrsItems.length > 0 && (
-          <a href="#srs-review" className="day-jump__alert">
+          <a href="#srs-review" className="arc-nav__alert">
             Review ({dueSrsItems.length})
           </a>
         )}
@@ -281,7 +317,7 @@ export function DayView({ day }: { day: DayContent }) {
         <textarea
           id="notes"
           value={note}
-          onChange={(e) => setNote(day.day, e.target.value)}
+          onChange={(e) => onNoteChange(e.target.value)}
           rows={5}
           placeholder="Answer the reflection prompts in your own words…"
           className="notes-field"
@@ -321,16 +357,19 @@ export function DayView({ day }: { day: DayContent }) {
         Formula explorer
       </button>
 
-      <Suspense fallback={null}>
-        <FormulaExplorer
-          open={formulaOpen || explorer.open}
-          onClose={() => {
-            setFormulaOpen(false)
-            explorer.closeExplorer()
-          }}
-          initialQuery={explorer.query}
-        />
-      </Suspense>
+      {/* Mounted only while open: the explorer then starts from a clean slate
+          each time, and its chunk is not fetched until a student asks for it. */}
+      {(formulaOpen || explorer.open) && (
+        <Suspense fallback={null}>
+          <FormulaExplorer
+            onClose={() => {
+              setFormulaOpen(false)
+              explorer.closeExplorer()
+            }}
+            initialQuery={explorer.query}
+          />
+        </Suspense>
+      )}
     </article>
   )
 }

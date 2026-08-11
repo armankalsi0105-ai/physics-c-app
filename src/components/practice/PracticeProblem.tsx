@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useRef, useState } from 'react'
+import { useMemo, useState } from 'react'
 import {
   CheckCircle2,
   Compass,
@@ -73,29 +73,33 @@ export function PracticeProblem({
   const [showAid, setShowAid] = useState(false)
   const [xpEarned, setXpEarned] = useState(0)
   const [socratic, setSocratic] = useState<string | null>(null)
-  const attempted = useRef(false)
+  const [attempted, setAttempted] = useState(false)
 
   const hints = useMemo(() => getProgressiveHints(problem), [problem])
   const aid = useMemo(() => buildPracticeAid(problem), [problem])
   const correct = submitted && isCorrect(problem, value)
   const alreadySolved = state.solvedProblems.includes(baseProblem.id)
 
-  useEffect(() => {
+  // A new problem means a blank slate. Adjusting during render keeps the user
+  // from seeing one frame of the previous answer in the new problem's box.
+  const [lastProblemId, setLastProblemId] = useState(problem.id)
+  if (lastProblemId !== problem.id) {
+    setLastProblemId(problem.id)
     setValue('')
     setSubmitted(false)
     setHintTier(0)
     setShowAid(false)
     setXpEarned(0)
     setSocratic(null)
-    attempted.current = false
-  }, [problem.id])
+    setAttempted(false)
+  }
 
   const onCheck = () => {
     if (!value.trim()) return
     const ok = isCorrect(problem, value)
     setSubmitted(true)
-    const firstTry = !attempted.current && hintTier === 0
-    attempted.current = true
+    const firstTry = !attempted && hintTier === 0
+    setAttempted(true)
 
     if (!ok) {
       setSocratic(socraticPrompt(problem, value))
@@ -288,7 +292,7 @@ export function PracticeProblem({
                 setValue('')
                 setSocratic(null)
                 setHintTier(0)
-                attempted.current = false
+                setAttempted(false)
               }}
             >
               <Shuffle className="h-4 w-4" />

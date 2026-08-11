@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { Search, X } from 'lucide-react'
 import { Latex, tryLatex } from '@/components/Latex'
 import {
@@ -8,9 +8,9 @@ import {
   searchFormulas,
   type FormulaEntry,
 } from '@/data/formulaExplorer'
+import { useDialog } from '@/lib/useDialog'
 
 type Props = {
-  open: boolean
   onClose: () => void
   initialQuery?: string
 }
@@ -73,43 +73,23 @@ function FormulaDetail({ formula }: { formula: FormulaEntry }) {
   )
 }
 
-export function FormulaExplorer({ open, onClose, initialQuery }: Props) {
+// Rendered only while open, so the opening query is just initial state.
+export function FormulaExplorer({ onClose, initialQuery }: Props) {
   const [query, setQuery] = useState(initialQuery ?? '')
-  const [selected, setSelected] = useState<FormulaEntry | null>(null)
-
-  useEffect(() => {
-    if (open) {
-      setQuery(initialQuery ?? '')
-      if (initialQuery) {
-        const results = searchFormulas(initialQuery)
-        setSelected(results[0] ?? null)
-      } else {
-        setSelected(null)
-      }
-    }
-  }, [open, initialQuery])
+  const [selected, setSelected] = useState<FormulaEntry | null>(
+    () => (initialQuery ? (searchFormulas(initialQuery)[0] ?? null) : null),
+  )
+  const panelRef = useRef<HTMLDivElement>(null)
 
   const results = useMemo(() => searchFormulas(query), [query])
 
-  useEffect(() => {
-    if (!open) return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose()
-    }
-    window.addEventListener('keydown', onKey)
-    return () => window.removeEventListener('keydown', onKey)
-  }, [open, onClose])
-
-  if (!open) return null
+  useDialog(true, onClose, panelRef)
 
   return (
     <>
+      <div className="drawer-backdrop is-open" onClick={onClose} aria-hidden />
       <div
-        className={`drawer-backdrop${open ? ' is-open' : ''}`}
-        onClick={onClose}
-        aria-hidden
-      />
-      <div
+        ref={panelRef}
         className="formula-explorer"
         role="dialog"
         aria-modal="true"

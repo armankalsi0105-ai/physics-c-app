@@ -5,6 +5,7 @@ import { Layers, RotateCcw } from 'lucide-react'
 import { MathText } from '@/components/MathText'
 import { flashcardsForDay, type Flashcard } from '@/data/flashcards'
 import { useProgress } from '@/context/ProgressContext'
+import { hashSeed, seededShuffle } from '@/lib/shuffle'
 import type { LearnPhase } from '@/lib/types'
 
 function normalizeAnswer(s: string) {
@@ -13,15 +14,6 @@ function normalizeAnswer(s: string) {
     .replace(/\s+/g, '')
     .replace(/[·•]/g, '*')
     .replace(/−/g, '-')
-}
-
-function shuffle<T>(arr: T[]): T[] {
-  const a = [...arr]
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[a[i], a[j]] = [a[j], a[i]]
-  }
-  return a
 }
 
 function fillPrompt(card: Flashcard): { prompt: string; answer: string } {
@@ -74,10 +66,17 @@ export function FlashcardDeck({ day }: { day: number }) {
     ? (state.learnMode[card.id]?.phase ?? 'mcq')
     : 'mcq'
 
+  // Seeded on the card id: the option order has to survive hydration, and it
+  // should stay put if the component re-renders mid-question. Distractors are
+  // trimmed *before* the final shuffle so the answer can never be sliced off.
   const mcqOptions = useMemo(() => {
     if (!card) return []
-    const distractors = cards.filter((c) => c.id !== card.id).map((c) => c.back)
-    return shuffle([card.back, ...distractors]).slice(0, 4)
+    const seed = hashSeed(card.id)
+    const distractors = seededShuffle(
+      cards.filter((c) => c.id !== card.id).map((c) => c.back),
+      seed,
+    ).slice(0, 3)
+    return seededShuffle([card.back, ...distractors], seed + 1)
   }, [card, cards])
 
   const fill = useMemo(() => (card ? fillPrompt(card) : null), [card])
