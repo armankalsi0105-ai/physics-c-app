@@ -297,21 +297,3 @@ export function ConnectBack({ day }: { day: number }) {
   )
 }
 
-export function StudyPath() {
-  const steps = [
-    'Real world',
-    'Goals',
-    'Math tool',
-    'Physics link',
-    'Practice',
-    'Teach back',
-    'Quiz',
-  ]
-  return (
-    <ol className="study-path" aria-label="How this day teaches you">
-      {steps.map((s) => (
-        <li key={s}>{s}</li>
-      ))}
-    </ol>
-  )
-}

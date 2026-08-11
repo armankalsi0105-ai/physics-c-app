@@ -39,7 +39,6 @@ import {
   RealWorldPanel,
   ReflectionPrompts,
   ConnectBack,
-  StudyPath,
   TeachBack,
 } from '@/components/study/CoachPanels'
 import { useProgress } from '@/context/ProgressContext'
@@ -135,18 +134,25 @@ export function DayView({ day }: { day: DayContent }) {
         </div>
       </header>
 
-      <StudyPath />
-
       <KnowledgeGraphPanel day={day.day} />
 
-      <nav className="day-jump" aria-label="Jump to section">
-        {JUMP.map((j) => (
-          <a key={j.id} href={`#${j.id}`}>
-            {j.label}
-          </a>
-        ))}
+      {/* One numbered arc replaces the old static StudyPath strip plus a
+          separate pill row — same sequence, but every step is a jump link. */}
+      <nav className="arc-nav" aria-label="Lesson sections">
+        <ol className="arc-nav__list">
+          {JUMP.map((j, i) => (
+            <li key={j.id}>
+              <a href={`#${j.id}`}>
+                <span className="arc-nav__num" aria-hidden>
+                  {i + 1}
+                </span>
+                {j.label}
+              </a>
+            </li>
+          ))}
+        </ol>
         {dueSrsItems.length > 0 && (
-          <a href="#srs-review" className="day-jump__alert">
+          <a href="#srs-review" className="arc-nav__alert">
             Review ({dueSrsItems.length})
           </a>
         )}
