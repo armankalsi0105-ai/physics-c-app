@@ -1,50 +1,68 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #e8eef3;
-  --ink-soft: #b4c2ce;
-  --muted: #7a8d9c;
-  --paper: #0c1116;
-  --panel: #141b22;
-  --line: #24303a;
-  --line-strong: #3a4a58;
-  --accent: #3db8b0;
-  --accent-soft: rgba(61, 184, 176, 0.14);
-  --signal: #e8a066;
-  --signal-soft: rgba(232, 160, 102, 0.16);
-  --ok: #4ec9a8;
-  --ok-soft: rgba(78, 201, 168, 0.15);
-  --formula-bg: #1a2830;
-  --formula-ink: #9ee5df;
+  /* Observatory — deep-space dark is the primary skin. */
+  --ink: #e9edfa;
+  --ink-soft: #b0bcd9;
+  --muted: #8492b5;
+  --paper: #05070f;
+  --panel: #0c1120;
+  --panel-high: #131a2e;
+  --line: #1d2643;
+  --line-strong: #33405f;
+  --accent: #56dcff;
+  --accent-soft: rgba(86, 220, 255, 0.14);
+  --accent-2: #b19bff;
+  --accent-2-soft: rgba(177, 155, 255, 0.15);
+  --signal: #ffb266;
+  --signal-soft: rgba(255, 178, 102, 0.15);
+  --ok: #5eead4;
+  --ok-soft: rgba(94, 234, 212, 0.15);
+  --formula-bg: #0f1830;
+  --formula-ink: #9fe6ff;
   --background: var(--paper);
   --foreground: var(--ink);
   --math-font: var(--font-math), "KaTeX_Main", "Cambria Math", Georgia, serif;
-  --elevation: 0 1px 0 rgba(255,255,255,0.04), 0 12px 40px rgba(0,0,0,0.35);
-  --chart-1: #3db8b0;
-  --chart-2: #e8a066;
-  --chart-3: #7aa2ff;
-  --chart-4: #c9a0ff;
-  --chart-5: #f0d56e;
+  --elevation: 0 1px 0 rgba(255,255,255,0.05), 0 12px 40px rgba(0,0,0,0.55);
+  /* Luminance is the whole point of this skin: accents emit light. */
+  --glow-accent: 0 0 0 1px color-mix(in srgb, var(--accent) 42%, transparent),
+    0 0 18px color-mix(in srgb, var(--accent) 30%, transparent);
+  --glow-soft: 0 0 24px color-mix(in srgb, var(--accent) 18%, transparent);
+  --chart-1: #56dcff;
+  --chart-2: #b19bff;
+  --chart-3: #ffb266;
+  --chart-4: #5eead4;
+  --chart-5: #f2d06b;
 }
 
 html[data-theme='light'] {
-  --ink: #14202c;
-  --ink-soft: #3a4d5e;
-  /* Clears 4.5:1 on both --paper and --panel; #677b8c measured 4.27:1. */
-  --muted: #5a6c7d;
-  --paper: #eef2f5;
-  --panel: #fbfcfd;
-  --line: #d9e1e8;
-  --line-strong: #b8c5d0;
-  --accent: #0f5c63;
-  --accent-soft: #dceced;
-  --signal: #a34b12;
-  --signal-soft: #f6e6d8;
-  --ok: #1a6b5c;
-  --ok-soft: #eef8f4;
-  --formula-bg: #e8f3f3;
-  --formula-ink: #0d454a;
-  --elevation: 0 1px 2px rgba(21, 32, 43, 0.04), 0 18px 40px rgba(21, 32, 43, 0.05);
+  /* Daylight observatory: same hues, darkened until they carry on white. */
+  --ink: #0e1526;
+  --ink-soft: #35415e;
+  --muted: #5a6683;
+  --paper: #eaeefb;
+  --panel: #fbfcff;
+  --panel-high: #ffffff;
+  --line: #d7dcee;
+  --line-strong: #b3bcd8;
+  --accent: #0b6f92;
+  --accent-soft: #dcf0f8;
+  --accent-2: #5a3ec8;
+  --accent-2-soft: #ebe6fb;
+  --signal: #9c4f0d;
+  --signal-soft: #fbeadb;
+  --ok: #10715f;
+  --ok-soft: #e6f6f2;
+  --formula-bg: #e6f2f8;
+  --formula-ink: #0a4f66;
+  --glow-accent: 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent);
+  --glow-soft: none;
+  --chart-1: #0b6f92;
+  --chart-2: #5a3ec8;
+  --chart-3: #9c4f0d;
+  --chart-4: #10715f;
+  --chart-5: #8a6b00;
+  --elevation: 0 1px 2px rgba(14, 21, 38, 0.05), 0 18px 40px rgba(14, 21, 38, 0.07);
 }
 
 @theme inline {
@@ -133,16 +151,24 @@ sub { top: 0.15em; }
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(ellipse 80% 50% at 0% -10%, rgba(61, 184, 176, 0.12), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(232, 160, 102, 0.06), transparent 50%),
-    linear-gradient(180deg, #0e141a 0%, #0c1116 55%, #0a0f14 100%);
+    /* Two nebulae and a faint star grid over a deep-space wash. */
+    radial-gradient(1px 1px at 12% 18%, rgba(233, 237, 250, 0.5), transparent 100%),
+    radial-gradient(1px 1px at 68% 9%, rgba(233, 237, 250, 0.35), transparent 100%),
+    radial-gradient(1.4px 1.4px at 84% 42%, rgba(177, 155, 255, 0.5), transparent 100%),
+    radial-gradient(1px 1px at 33% 61%, rgba(86, 220, 255, 0.4), transparent 100%),
+    radial-gradient(1px 1px at 91% 77%, rgba(233, 237, 250, 0.3), transparent 100%),
+    radial-gradient(1.2px 1.2px at 22% 88%, rgba(233, 237, 250, 0.32), transparent 100%),
+    radial-gradient(ellipse 70% 50% at 8% -8%, rgba(86, 220, 255, 0.16), transparent 60%),
+    radial-gradient(ellipse 60% 45% at 96% 4%, rgba(177, 155, 255, 0.16), transparent 58%),
+    radial-gradient(ellipse 80% 60% at 50% 108%, rgba(86, 220, 255, 0.07), transparent 62%),
+    linear-gradient(180deg, #070b18 0%, #05070f 55%, #03050b 100%);
 }
 
 html[data-theme='light'] .atmosphere {
   background:
-    radial-gradient(ellipse 80% 50% at 0% -10%, rgba(15, 92, 99, 0.1), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(163, 75, 18, 0.06), transparent 50%),
-    linear-gradient(180deg, #f3f6f8 0%, #e9eef2 55%, #e2e8ee 100%);
+    radial-gradient(ellipse 70% 50% at 8% -8%, rgba(11, 111, 146, 0.12), transparent 60%),
+    radial-gradient(ellipse 60% 45% at 96% 4%, rgba(90, 62, 200, 0.09), transparent 58%),
+    linear-gradient(180deg, #f2f5fd 0%, #eaeefb 55%, #e2e8f8 100%);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1475,31 +1501,30 @@ html[data-theme='light'] .atmosphere {
 /* ---------- Dark mode ---------- */
 
 html[data-theme='dark'] {
-  --ink: #e8eef4;
-  --ink-soft: #b6c3d0;
-  --muted: #8a9aab;
-  --paper: #0f141b;
-  --panel: #171e28;
-  --line: #2a3544;
-  --line-strong: #3d4d60;
-  --accent: #3db8c0;
-  --accent-soft: #1a3338;
-  --signal: #e08a4d;
-  --signal-soft: #3a2a1c;
-  --ok: #4ec9b0;
-  --formula-bg: #1a2c30;
-  --formula-ink: #9fd8dc;
+  --ink: #e9edfa;
+  --ink-soft: #b0bcd9;
+  --muted: #8492b5;
+  --paper: #05070f;
+  --panel: #0c1120;
+  --panel-high: #131a2e;
+  --line: #1d2643;
+  --line-strong: #33405f;
+  --accent: #56dcff;
+  --accent-soft: rgba(86, 220, 255, 0.14);
+  --accent-2: #b19bff;
+  --accent-2-soft: rgba(177, 155, 255, 0.15);
+  --signal: #ffb266;
+  --signal-soft: rgba(255, 178, 102, 0.15);
+  --ok: #5eead4;
+  --ok-soft: rgba(94, 234, 212, 0.15);
+  --formula-bg: #0f1830;
+  --formula-ink: #9fe6ff;
   --background: var(--paper);
   --foreground: var(--ink);
   color-scheme: dark;
 }
 
-html[data-theme='dark'] .atmosphere {
-  background:
-    radial-gradient(ellipse 80% 50% at 0% -10%, rgba(61, 184, 192, 0.12), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(224, 138, 77, 0.08), transparent 50%),
-    linear-gradient(180deg, #121820 0%, #0f141b 55%, #0c1016 100%);
-}
+
 
 html[data-theme='dark'] .topbar {
   background: rgba(15, 20, 27, 0.88);
@@ -4370,6 +4395,237 @@ p.lead {
   font-weight: 800;
   letter-spacing: 0.06em;
   text-transform: uppercase;
+}
+
+
+/* ==========================================================================
+   Observatory skin
+   Accents emit light rather than just carrying colour: rings, active states
+   and the hero band glow, and the page sits on a starfield.
+   ========================================================================== */
+
+/* ---- Hero band: orbital arcs over a nebula ---- */
+
+.page-hero {
+  background:
+    radial-gradient(
+      110% 130% at 100% 0%,
+      color-mix(in srgb, var(--accent) 22%, transparent) 0%,
+      transparent 58%
+    ),
+    radial-gradient(
+      90% 120% at 0% 100%,
+      color-mix(in srgb, var(--accent-2) 20%, transparent) 0%,
+      transparent 55%
+    ),
+    linear-gradient(
+      152deg,
+      color-mix(in srgb, var(--accent) 10%, var(--panel-high)) 0%,
+      var(--panel) 72%
+    );
+}
+
+/* Concentric arcs, drawn off-centre so only the limb crosses the band. */
+.page-hero::before,
+.page-hero::after {
+  content: '';
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
+  pointer-events: none;
+}
+
+.page-hero::before {
+  width: 34rem;
+  height: 34rem;
+  top: -13rem;
+  right: -9rem;
+}
+
+.page-hero::after {
+  width: 22rem;
+  height: 22rem;
+  top: -6rem;
+  right: -3rem;
+  border-color: color-mix(in srgb, var(--accent-2) 22%, transparent);
+}
+
+.page-hero__eyebrow {
+  text-shadow: 0 0 14px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.page-hero__watermark {
+  color: color-mix(in srgb, var(--accent) 13%, transparent);
+  text-shadow: 0 0 40px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+/* ---- Surfaces ---- */
+
+.day-view,
+.exam-mode,
+.analytics-dash {
+  background: color-mix(in srgb, var(--panel) 92%, transparent);
+  backdrop-filter: blur(10px);
+  border-color: var(--line);
+}
+
+/* A hairline of light along the top edge reads as a lit surface. */
+.day-view::before,
+.exam-mode::before,
+.analytics-dash::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--accent) 55%, transparent),
+    transparent
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+
+.sidebar-dash,
+.quest-card,
+.ui-card,
+.coach-card,
+.real-world,
+.myth-panel,
+.bridge-card,
+.teachback,
+.confidence,
+.worked-example,
+.kg-panel,
+.exam-mcq,
+.practice-card,
+.flashcard-panel,
+.match-panel {
+  background: color-mix(in srgb, var(--panel-high) 78%, transparent);
+  border-color: var(--line);
+}
+
+/* ---- Luminous accents ---- */
+
+.progress-ring__arc {
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 65%, transparent));
+}
+
+.topbar__rail-fill,
+.goal-track__fill,
+.goal-bar > span {
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
+  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.day-num--done {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper);
+  box-shadow: 0 0 0 3px var(--panel), var(--glow-soft);
+}
+
+.day-nav-link.is-active {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  box-shadow: var(--glow-accent);
+}
+
+.day-nav-link.is-active .day-num {
+  box-shadow: 0 0 0 3px var(--panel), var(--glow-accent);
+}
+
+.arc-nav a:hover .arc-nav__num,
+.section-head__num {
+  text-shadow: 0 0 16px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.arc-nav a:hover {
+  box-shadow: var(--glow-soft);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  border-color: transparent;
+  color: #05070f;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, var(--accent), var(--accent-2));
+  filter: brightness(1.08);
+  box-shadow: var(--glow-soft);
+}
+
+.hero-chip--focus,
+.mastery-badge {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 28%, transparent);
+}
+
+.formula-block,
+.formula-answer {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 16%, transparent);
+}
+
+/* Data readouts want tabular, technical figures. */
+.exam-mode__timer,
+.match-timer,
+.progress-ring__label,
+.score-chip,
+.stat-chip strong {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum' 1;
+}
+
+/* The light skin is a daylight observatory: keep the shapes, drop the glow. */
+html[data-theme='light'] .day-view,
+html[data-theme='light'] .exam-mode,
+html[data-theme='light'] .analytics-dash {
+  background: var(--panel);
+  backdrop-filter: none;
+}
+
+html[data-theme='light'] .sidebar-dash,
+html[data-theme='light'] .quest-card,
+html[data-theme='light'] .ui-card,
+html[data-theme='light'] .coach-card,
+html[data-theme='light'] .real-world,
+html[data-theme='light'] .myth-panel,
+html[data-theme='light'] .bridge-card,
+html[data-theme='light'] .teachback,
+html[data-theme='light'] .confidence,
+html[data-theme='light'] .worked-example,
+html[data-theme='light'] .kg-panel,
+html[data-theme='light'] .exam-mcq,
+html[data-theme='light'] .practice-card,
+html[data-theme='light'] .flashcard-panel,
+html[data-theme='light'] .match-panel {
+  background: var(--panel-high);
+}
+
+html[data-theme='light'] .page-hero__eyebrow,
+html[data-theme='light'] .page-hero__watermark,
+html[data-theme='light'] .section-head__num {
+  text-shadow: none;
+}
+
+html[data-theme='light'] .progress-ring__arc {
+  filter: none;
+}
+
+html[data-theme='light'] .btn-primary {
+  color: #ffffff;
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .day-view,
+  .exam-mode,
+  .analytics-dash {
+    background: var(--panel);
+    backdrop-filter: none;
+  }
 }
 
 /* ---------- Responsive visibility helpers ----------
