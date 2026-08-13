@@ -1,68 +1,73 @@
 @import "tailwindcss";
 
 :root {
-  /* Observatory — deep-space dark is the primary skin. */
-  --ink: #e9edfa;
-  --ink-soft: #b0bcd9;
-  --muted: #8492b5;
-  --paper: #05070f;
-  --panel: #0c1120;
-  --panel-high: #131a2e;
-  --line: #1d2643;
-  --line-strong: #33405f;
-  --accent: #56dcff;
-  --accent-soft: rgba(86, 220, 255, 0.14);
-  --accent-2: #b19bff;
-  --accent-2-soft: rgba(177, 155, 255, 0.15);
-  --signal: #ffb266;
-  --signal-soft: rgba(255, 178, 102, 0.15);
-  --ok: #5eead4;
-  --ok-soft: rgba(94, 234, 212, 0.15);
-  --formula-bg: #0f1830;
-  --formula-ink: #9fe6ff;
+  /* Neutral near-black; the accent is for interactive state, nothing else. */
+  --ink: #e9eaee;
+  --ink-soft: #a8adb8;
+  /* Measured 4.40:1 on --panel-high at #7d838f; this clears AA. */
+  --muted: #868c98;
+  --paper: #0b0c0e;
+  --panel: #131418;
+  --panel-high: #1a1c21;
+  --line: #24262c;
+  --line-strong: #34373f;
+  --accent: #7c9cff;
+  --accent-soft: rgba(124, 156, 255, 0.14);
+  --signal: #e0a458;
+  --signal-soft: rgba(224, 164, 88, 0.14);
+  --ok: #5cb890;
+  --ok-soft: rgba(92, 184, 144, 0.14);
+  --formula-bg: #16181d;
+  --formula-ink: #a9c2ff;
   --background: var(--paper);
   --foreground: var(--ink);
   --math-font: var(--font-math), "KaTeX_Main", "Cambria Math", Georgia, serif;
-  --elevation: 0 1px 0 rgba(255,255,255,0.05), 0 12px 40px rgba(0,0,0,0.55);
-  /* Luminance is the whole point of this skin: accents emit light. */
-  --glow-accent: 0 0 0 1px color-mix(in srgb, var(--accent) 42%, transparent),
-    0 0 18px color-mix(in srgb, var(--accent) 30%, transparent);
-  --glow-soft: 0 0 24px color-mix(in srgb, var(--accent) 18%, transparent);
-  --chart-1: #56dcff;
-  --chart-2: #b19bff;
-  --chart-3: #ffb266;
-  --chart-4: #5eead4;
-  --chart-5: #f2d06b;
+
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 12px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.45);
+  --elevation: var(--shadow-md);
+  --ring-accent: 0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent);
+
+  --chart-1: #7c9cff;
+  --chart-2: #5cb890;
+  --chart-3: #e0a458;
+  --chart-4: #b98ce0;
+  --chart-5: #6fb4c9;
 }
 
 html[data-theme='light'] {
-  /* Daylight observatory: same hues, darkened until they carry on white. */
-  --ink: #0e1526;
-  --ink-soft: #35415e;
-  --muted: #5a6683;
-  --paper: #eaeefb;
-  --panel: #fbfcff;
+  --ink: #14161a;
+  --ink-soft: #40454e;
+  --muted: #5f6572;
+  --paper: #f5f6f8;
+  --panel: #ffffff;
   --panel-high: #ffffff;
-  --line: #d7dcee;
-  --line-strong: #b3bcd8;
-  --accent: #0b6f92;
-  --accent-soft: #dcf0f8;
-  --accent-2: #5a3ec8;
-  --accent-2-soft: #ebe6fb;
-  --signal: #9c4f0d;
-  --signal-soft: #fbeadb;
-  --ok: #10715f;
-  --ok-soft: #e6f6f2;
-  --formula-bg: #e6f2f8;
-  --formula-ink: #0a4f66;
-  --glow-accent: 0 0 0 1px color-mix(in srgb, var(--accent) 30%, transparent);
-  --glow-soft: none;
-  --chart-1: #0b6f92;
-  --chart-2: #5a3ec8;
-  --chart-3: #9c4f0d;
-  --chart-4: #10715f;
-  --chart-5: #8a6b00;
-  --elevation: 0 1px 2px rgba(14, 21, 38, 0.05), 0 18px 40px rgba(14, 21, 38, 0.07);
+  --line: #e4e6eb;
+  --line-strong: #c9cdd6;
+  --accent: #2f4fd8;
+  --accent-soft: #eaeeff;
+  --signal: #9a5b12;
+  --signal-soft: #fbf0e2;
+  --ok: #14724f;
+  --ok-soft: #e8f5ef;
+  --formula-bg: #f2f4f9;
+  --formula-ink: #2b3f8f;
+
+  --shadow-sm: 0 1px 2px rgba(16, 20, 28, 0.06);
+  --shadow-md: 0 1px 3px rgba(16, 20, 28, 0.08);
+  --shadow-lg: 0 2px 12px rgba(16, 20, 28, 0.08);
+  --elevation: var(--shadow-md);
+
+  --chart-1: #2f4fd8;
+  --chart-2: #14724f;
+  --chart-3: #9a5b12;
+  --chart-4: #6b3fb5;
+  --chart-5: #12657a;
 }
 
 @theme inline {
@@ -150,25 +155,11 @@ sub { top: 0.15em; }
   position: fixed;
   inset: 0;
   z-index: -1;
-  background:
-    /* Two nebulae and a faint star grid over a deep-space wash. */
-    radial-gradient(1px 1px at 12% 18%, rgba(233, 237, 250, 0.5), transparent 100%),
-    radial-gradient(1px 1px at 68% 9%, rgba(233, 237, 250, 0.35), transparent 100%),
-    radial-gradient(1.4px 1.4px at 84% 42%, rgba(177, 155, 255, 0.5), transparent 100%),
-    radial-gradient(1px 1px at 33% 61%, rgba(86, 220, 255, 0.4), transparent 100%),
-    radial-gradient(1px 1px at 91% 77%, rgba(233, 237, 250, 0.3), transparent 100%),
-    radial-gradient(1.2px 1.2px at 22% 88%, rgba(233, 237, 250, 0.32), transparent 100%),
-    radial-gradient(ellipse 70% 50% at 8% -8%, rgba(86, 220, 255, 0.16), transparent 60%),
-    radial-gradient(ellipse 60% 45% at 96% 4%, rgba(177, 155, 255, 0.16), transparent 58%),
-    radial-gradient(ellipse 80% 60% at 50% 108%, rgba(86, 220, 255, 0.07), transparent 62%),
-    linear-gradient(180deg, #070b18 0%, #05070f 55%, #03050b 100%);
+  background: var(--paper);
 }
 
 html[data-theme='light'] .atmosphere {
-  background:
-    radial-gradient(ellipse 70% 50% at 8% -8%, rgba(11, 111, 146, 0.12), transparent 60%),
-    radial-gradient(ellipse 60% 45% at 96% 4%, rgba(90, 62, 200, 0.09), transparent 58%),
-    linear-gradient(180deg, #f2f5fd 0%, #eaeefb 55%, #e2e8f8 100%);
+  background: var(--paper);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1501,24 +1492,23 @@ html[data-theme='light'] .atmosphere {
 /* ---------- Dark mode ---------- */
 
 html[data-theme='dark'] {
-  --ink: #e9edfa;
-  --ink-soft: #b0bcd9;
-  --muted: #8492b5;
-  --paper: #05070f;
-  --panel: #0c1120;
-  --panel-high: #131a2e;
-  --line: #1d2643;
-  --line-strong: #33405f;
-  --accent: #56dcff;
-  --accent-soft: rgba(86, 220, 255, 0.14);
-  --accent-2: #b19bff;
-  --accent-2-soft: rgba(177, 155, 255, 0.15);
-  --signal: #ffb266;
-  --signal-soft: rgba(255, 178, 102, 0.15);
-  --ok: #5eead4;
-  --ok-soft: rgba(94, 234, 212, 0.15);
-  --formula-bg: #0f1830;
-  --formula-ink: #9fe6ff;
+  --ink: #e9eaee;
+  --ink-soft: #a8adb8;
+  /* Measured 4.40:1 on --panel-high at #7d838f; this clears AA. */
+  --muted: #868c98;
+  --paper: #0b0c0e;
+  --panel: #131418;
+  --panel-high: #1a1c21;
+  --line: #24262c;
+  --line-strong: #34373f;
+  --accent: #7c9cff;
+  --accent-soft: rgba(124, 156, 255, 0.14);
+  --signal: #e0a458;
+  --signal-soft: rgba(224, 164, 88, 0.14);
+  --ok: #5cb890;
+  --ok-soft: rgba(92, 184, 144, 0.14);
+  --formula-bg: #16181d;
+  --formula-ink: #a9c2ff;
   --background: var(--paper);
   --foreground: var(--ink);
   color-scheme: dark;
@@ -4128,8 +4118,9 @@ p.lead {
   gap: 0.3rem;
 }
 
+/* Decorative, but --line-strong made it all but invisible. */
 .page-hero__sep {
-  color: var(--line-strong);
+  color: var(--muted);
 }
 
 .page-hero__meta .is-done {
@@ -4398,237 +4389,6 @@ p.lead {
 }
 
 
-/* ==========================================================================
-   Observatory skin
-   Accents emit light rather than just carrying colour: rings, active states
-   and the hero band glow, and the page sits on a starfield.
-   ========================================================================== */
-
-/* ---- Hero band: orbital arcs over a nebula ---- */
-
-.page-hero {
-  background:
-    radial-gradient(
-      110% 130% at 100% 0%,
-      color-mix(in srgb, var(--accent) 22%, transparent) 0%,
-      transparent 58%
-    ),
-    radial-gradient(
-      90% 120% at 0% 100%,
-      color-mix(in srgb, var(--accent-2) 20%, transparent) 0%,
-      transparent 55%
-    ),
-    linear-gradient(
-      152deg,
-      color-mix(in srgb, var(--accent) 10%, var(--panel-high)) 0%,
-      var(--panel) 72%
-    );
-}
-
-/* Concentric arcs, drawn off-centre so only the limb crosses the band. */
-.page-hero::before,
-.page-hero::after {
-  content: '';
-  position: absolute;
-  border-radius: 50%;
-  border: 1px solid color-mix(in srgb, var(--accent) 22%, transparent);
-  pointer-events: none;
-}
-
-.page-hero::before {
-  width: 34rem;
-  height: 34rem;
-  top: -13rem;
-  right: -9rem;
-}
-
-.page-hero::after {
-  width: 22rem;
-  height: 22rem;
-  top: -6rem;
-  right: -3rem;
-  border-color: color-mix(in srgb, var(--accent-2) 22%, transparent);
-}
-
-.page-hero__eyebrow {
-  text-shadow: 0 0 14px color-mix(in srgb, var(--accent) 45%, transparent);
-}
-
-.page-hero__watermark {
-  color: color-mix(in srgb, var(--accent) 13%, transparent);
-  text-shadow: 0 0 40px color-mix(in srgb, var(--accent) 16%, transparent);
-}
-
-/* ---- Surfaces ---- */
-
-.day-view,
-.exam-mode,
-.analytics-dash {
-  background: color-mix(in srgb, var(--panel) 92%, transparent);
-  backdrop-filter: blur(10px);
-  border-color: var(--line);
-}
-
-/* A hairline of light along the top edge reads as a lit surface. */
-.day-view::before,
-.exam-mode::before,
-.analytics-dash::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 12%;
-  right: 12%;
-  height: 1px;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    color-mix(in srgb, var(--accent) 55%, transparent),
-    transparent
-  );
-  z-index: 2;
-  pointer-events: none;
-}
-
-.sidebar-dash,
-.quest-card,
-.ui-card,
-.coach-card,
-.real-world,
-.myth-panel,
-.bridge-card,
-.teachback,
-.confidence,
-.worked-example,
-.kg-panel,
-.exam-mcq,
-.practice-card,
-.flashcard-panel,
-.match-panel {
-  background: color-mix(in srgb, var(--panel-high) 78%, transparent);
-  border-color: var(--line);
-}
-
-/* ---- Luminous accents ---- */
-
-.progress-ring__arc {
-  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--accent) 65%, transparent));
-}
-
-.topbar__rail-fill,
-.goal-track__fill,
-.goal-bar > span {
-  background: linear-gradient(90deg, var(--accent), var(--accent-2));
-  box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 45%, transparent);
-}
-
-.day-num--done {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: var(--paper);
-  box-shadow: 0 0 0 3px var(--panel), var(--glow-soft);
-}
-
-.day-nav-link.is-active {
-  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
-  background: color-mix(in srgb, var(--accent) 10%, transparent);
-  box-shadow: var(--glow-accent);
-}
-
-.day-nav-link.is-active .day-num {
-  box-shadow: 0 0 0 3px var(--panel), var(--glow-accent);
-}
-
-.arc-nav a:hover .arc-nav__num,
-.section-head__num {
-  text-shadow: 0 0 16px color-mix(in srgb, var(--accent) 40%, transparent);
-}
-
-.arc-nav a:hover {
-  box-shadow: var(--glow-soft);
-}
-
-.btn-primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  border-color: transparent;
-  color: #05070f;
-}
-
-.btn-primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, var(--accent), var(--accent-2));
-  filter: brightness(1.08);
-  box-shadow: var(--glow-soft);
-}
-
-.hero-chip--focus,
-.mastery-badge {
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 28%, transparent);
-}
-
-.formula-block,
-.formula-answer {
-  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 16%, transparent);
-}
-
-/* Data readouts want tabular, technical figures. */
-.exam-mode__timer,
-.match-timer,
-.progress-ring__label,
-.score-chip,
-.stat-chip strong {
-  font-variant-numeric: tabular-nums;
-  font-feature-settings: 'tnum' 1;
-}
-
-/* The light skin is a daylight observatory: keep the shapes, drop the glow. */
-html[data-theme='light'] .day-view,
-html[data-theme='light'] .exam-mode,
-html[data-theme='light'] .analytics-dash {
-  background: var(--panel);
-  backdrop-filter: none;
-}
-
-html[data-theme='light'] .sidebar-dash,
-html[data-theme='light'] .quest-card,
-html[data-theme='light'] .ui-card,
-html[data-theme='light'] .coach-card,
-html[data-theme='light'] .real-world,
-html[data-theme='light'] .myth-panel,
-html[data-theme='light'] .bridge-card,
-html[data-theme='light'] .teachback,
-html[data-theme='light'] .confidence,
-html[data-theme='light'] .worked-example,
-html[data-theme='light'] .kg-panel,
-html[data-theme='light'] .exam-mcq,
-html[data-theme='light'] .practice-card,
-html[data-theme='light'] .flashcard-panel,
-html[data-theme='light'] .match-panel {
-  background: var(--panel-high);
-}
-
-html[data-theme='light'] .page-hero__eyebrow,
-html[data-theme='light'] .page-hero__watermark,
-html[data-theme='light'] .section-head__num {
-  text-shadow: none;
-}
-
-html[data-theme='light'] .progress-ring__arc {
-  filter: none;
-}
-
-html[data-theme='light'] .btn-primary {
-  color: #ffffff;
-}
-
-@media (prefers-reduced-transparency: reduce) {
-  .day-view,
-  .exam-mode,
-  .analytics-dash {
-    background: var(--panel);
-    backdrop-filter: none;
-  }
-}
-
-
 /* ---------- Home: mission control ----------
  *
  * `/` used to redirect straight into a lesson, so the course had no front
@@ -4870,6 +4630,472 @@ html[data-theme='light'] .home-today {
 
 html[data-theme='light'] .home-next__num {
   text-shadow: none;
+}
+
+
+/* ==========================================================================
+   Restraint pass
+   The previous skin leaned on gradients, glow and oversized display type,
+   which reads as decoration rather than product. Surfaces are flat, the
+   accent only marks interactive state, and density is tighter throughout.
+   ========================================================================== */
+
+/* ---- Shells ---- */
+
+.day-view,
+.exam-mode,
+.analytics-dash,
+.home {
+  max-width: 46rem;
+  border-radius: var(--r-lg);
+  background: var(--panel);
+  backdrop-filter: none;
+  box-shadow: var(--shadow-sm);
+}
+
+/* The lit top edge was pure ornament. */
+.day-view::before,
+.exam-mode::before,
+.analytics-dash::before,
+.home::before {
+  display: none;
+}
+
+.day-view > *:not(.page-hero),
+.exam-mode > *:not(.page-hero),
+.analytics-dash > *:not(.page-hero),
+.home > *:not(.page-hero) {
+  padding-left: 1.75rem;
+  padding-right: 1.75rem;
+}
+
+/* ---- Hero: a header, not a landing band ---- */
+
+.page-hero {
+  margin-bottom: 1.5rem;
+  padding: 1.75rem 1.75rem 1.5rem;
+  background: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.page-hero::before,
+.page-hero::after,
+.page-hero__watermark {
+  display: none;
+}
+
+/* The aside used to sit in a flex row with the eyebrow, so a 64px ring left a
+   band of dead space above the title. Take it out of flow instead. */
+.page-hero__top {
+  display: block;
+}
+
+.page-hero__aside {
+  position: absolute;
+  top: 1.75rem;
+  right: 1.75rem;
+}
+
+.page-hero__eyebrow,
+.page-hero__title,
+.page-hero__meta {
+  padding-right: 5.5rem;
+}
+
+.page-hero__eyebrow {
+  gap: 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-shadow: none;
+}
+
+.page-hero__eyebrow::before {
+  display: none;
+}
+
+.page-hero__title {
+  margin-top: 0.5rem;
+  max-width: 24ch;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.22;
+}
+
+.page-hero__meta {
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.page-hero__actions {
+  margin-top: 1.1rem;
+}
+
+/* ---- Controls ---- */
+
+.btn-primary,
+.btn-ghost,
+.btn-signal {
+  min-height: 2.25rem;
+  border-radius: var(--r-md);
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+}
+
+.btn-primary {
+  padding: 0 0.9rem;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--paper);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: none;
+  filter: brightness(1.08);
+  box-shadow: none;
+}
+
+.btn-ghost {
+  padding: 0 0.9rem;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--ink);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  border-color: var(--line-strong);
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+}
+
+.btn-signal {
+  min-height: 2.4rem;
+  padding: 0 1rem;
+  border: 1px solid var(--signal);
+  background: var(--signal);
+  color: var(--paper);
+  font-weight: 700;
+}
+
+.stat-chip,
+.icon-btn {
+  border-radius: var(--r-md);
+}
+
+.stat-chip {
+  min-height: 2.1rem;
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+
+.stat-chip strong {
+  font-weight: 600;
+}
+
+/* ---- Surfaces ---- */
+
+.sidebar-dash,
+.quest-card,
+.ui-card,
+.coach-card,
+.myth-panel,
+.bridge-card,
+.teachback,
+.confidence,
+.worked-example,
+.kg-panel,
+.exam-mcq,
+.practice-card,
+.flashcard-panel,
+.match-panel,
+.panel,
+.video-item,
+.home-today {
+  border-radius: var(--r-md);
+  background: var(--panel-high);
+  box-shadow: none;
+}
+
+.real-world {
+  border-radius: var(--r-md);
+  border-color: var(--line);
+  background: var(--panel-high);
+  box-shadow: none;
+}
+
+.worked-example__header {
+  background: color-mix(in srgb, var(--accent) 7%, var(--panel-high));
+  border-bottom-color: var(--line);
+}
+
+/* ---- Section markers ---- */
+
+.section-block {
+  margin-bottom: 2.5rem;
+}
+
+.section-head {
+  gap: 0.6rem;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.section-head__num {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  text-shadow: none;
+}
+
+.section-head h2 {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.exam-mode > section > h2,
+.analytics-dash h2 {
+  margin: 2rem 0 0.9rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.subhead {
+  margin: 1.6rem 0 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+/* ---- Step rail ---- */
+
+.arc-nav {
+  margin-bottom: 1.75rem;
+}
+
+.arc-nav a {
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+
+.arc-nav a:hover {
+  box-shadow: none;
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  border-color: transparent;
+  color: var(--ink);
+}
+
+.arc-nav__num {
+  width: 1.35rem;
+  height: 1.35rem;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  font-size: 0.64rem;
+  font-weight: 600;
+  text-shadow: none;
+}
+
+.arc-nav a:hover .arc-nav__num {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--accent);
+  color: var(--accent);
+  text-shadow: none;
+}
+
+/* ---- Progress ---- */
+
+.progress-ring__arc {
+  filter: none;
+}
+
+.topbar__rail-fill,
+.goal-track__fill,
+.goal-bar > span {
+  background: var(--accent);
+  box-shadow: none;
+}
+
+/* ---- Syllabus ---- */
+
+.day-nav-link {
+  border-radius: var(--r-sm);
+  min-height: 2.35rem;
+}
+
+.day-nav-link.is-active {
+  border-color: transparent;
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  box-shadow: none;
+}
+
+.day-num {
+  border-radius: var(--r-sm);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  box-shadow: 0 0 0 3px var(--panel);
+}
+
+.day-num--done {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  color: var(--accent);
+  box-shadow: 0 0 0 3px var(--panel);
+}
+
+.day-nav-link.is-active .day-num {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper);
+  box-shadow: 0 0 0 3px var(--panel);
+}
+
+/* ---- Home ---- */
+
+.home-next__card {
+  gap: 0.85rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--panel-high);
+  box-shadow: none;
+}
+
+.home-next__card:hover {
+  transform: none;
+  border-color: var(--line-strong);
+  background: color-mix(in srgb, var(--ink) 4%, var(--panel-high));
+  box-shadow: none;
+}
+
+.home-next__num {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-shadow: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.home-next__title {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.home-node {
+  height: 2.2rem;
+  width: 2.2rem;
+  border-radius: var(--r-sm);
+  border-color: var(--line);
+  background: transparent;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.home-node:hover {
+  transform: none;
+  border-color: var(--line-strong);
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  box-shadow: none;
+}
+
+.home-node.is-done {
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.home-node.is-current {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--paper);
+  box-shadow: none;
+}
+
+/* ---- Reading ---- */
+
+.prose-p {
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.lead .prose-p,
+p.lead {
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+
+/* Chips read as labels, not badges. */
+.hero-chip,
+.mastery-badge {
+  min-height: 1.75rem;
+  border-radius: var(--r-sm);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  box-shadow: none;
+}
+
+.exam-mode__timer {
+  border-radius: var(--r-md);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.exam-mode__timer.is-urgent {
+  background: var(--signal-soft);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--signal) 45%, transparent);
+  color: var(--signal);
+}
+
+.formula-block,
+.formula-answer {
+  border-radius: var(--r-sm);
+  box-shadow: none;
+}
+
+@media (max-width: 639px) {
+  .day-view > *:not(.page-hero),
+  .exam-mode > *:not(.page-hero),
+  .analytics-dash > *:not(.page-hero),
+  .home > *:not(.page-hero) {
+    padding-left: 1.1rem;
+    padding-right: 1.1rem;
+  }
+  .page-hero {
+    padding: 1.4rem 1.1rem 1.25rem;
+  }
+  .page-hero__title {
+    font-size: 1.5rem;
+  }
+  .page-hero__aside {
+    top: 1.4rem;
+    right: 1.1rem;
+  }
+  .page-hero__eyebrow,
+  .page-hero__title,
+  .page-hero__meta {
+    padding-right: 4.5rem;
+  }
 }
 
 /* ---------- Responsive visibility helpers ----------
