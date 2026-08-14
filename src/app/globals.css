@@ -141,7 +141,7 @@ sub { top: 0.15em; }
   font-weight: 600;
   text-decoration: none;
   transform: translateY(-160%);
-  transition: transform 140ms ease;
+  transition: transform 140ms ease-out;
 }
 
 .skip-link:focus-visible {
@@ -265,7 +265,9 @@ html[data-theme='light'] .atmosphere {
   top: 0;
   z-index: 30;
   border-bottom: 1px solid var(--line);
-  background: rgba(243, 246, 248, 0.9);
+  /* Derived from --paper: hardcoding this is how the header ended up two
+     palettes behind the body it sits against. */
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
   backdrop-filter: blur(14px);
 }
 
@@ -399,7 +401,7 @@ html[data-theme='light'] .atmosphere {
 
 .sidebar-panel {
   border-right: 1px solid var(--line);
-  background: rgba(248, 250, 252, 0.98);
+  background: color-mix(in srgb, var(--paper) 96%, transparent);
 }
 
 .phase-label {
@@ -424,7 +426,7 @@ html[data-theme='light'] .atmosphere {
   border: 1px solid transparent;
   color: inherit;
   text-decoration: none;
-  transition: background 140ms ease, border-color 140ms ease;
+  transition: background 140ms ease-out, border-color 140ms ease-out;
 }
 
 .day-nav-link:hover { background: rgba(15, 92, 99, 0.06); }
@@ -691,7 +693,7 @@ html[data-theme='light'] .atmosphere {
   font-weight: 700;
   letter-spacing: 0.02em;
   cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition: background 0.15s ease-out, border-color 0.15s ease-out;
 }
 
 .formula-clip-btn:hover,
@@ -1135,7 +1137,7 @@ html[data-theme='light'] .atmosphere {
   word-spacing: 0.06em;
   font-variant-numeric: tabular-nums;
   line-height: 1.45;
-  transition: border-color 140ms ease, background 140ms ease;
+  transition: border-color 140ms ease-out, background 140ms ease-out;
 }
 
 .option-row:hover { border-color: var(--line-strong); }
@@ -1321,7 +1323,7 @@ html[data-theme='light'] .atmosphere {
   font-weight: 700;
   font-size: 0.88rem;
   cursor: pointer;
-  transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+  transition: transform 140ms ease-out, background 140ms ease-out, border-color 140ms ease-out;
 }
 
 /* Both of these paint on `--ink`/`--panel`, which invert with the theme, so
@@ -1397,7 +1399,7 @@ html[data-theme='light'] .atmosphere {
   font-weight: 700;
   color: var(--ink);
   text-decoration: none;
-  transition: border-color 140ms ease, transform 140ms ease;
+  transition: border-color 140ms ease-out, transform 140ms ease-out;
 }
 
 .day-footer-nav a:hover {
@@ -1515,14 +1517,6 @@ html[data-theme='dark'] {
 }
 
 
-
-html[data-theme='dark'] .topbar {
-  background: rgba(15, 20, 27, 0.88);
-}
-
-html[data-theme='dark'] .sidebar-panel {
-  background: rgba(23, 30, 40, 0.98);
-}
 
 html[data-theme='dark'] .day-footer-nav a {
   background: var(--panel);
@@ -2285,7 +2279,7 @@ html[data-theme='dark'] .real-world__try {
   font-size: 0.72rem;
   font-weight: 600;
   color: var(--muted);
-  transition: color 200ms ease;
+  transition: color 200ms ease-out;
 }
 
 .notes-saved.is-on {
@@ -2345,7 +2339,7 @@ html {
 .goal-track__fill {
   height: 100%;
   background: linear-gradient(90deg, var(--accent), #1a818a);
-  transition: width 400ms ease;
+  transition: width 400ms ease-out;
 }
 
 .sidebar-dash__meta {
@@ -2459,7 +2453,7 @@ html {
   background: rgba(10, 16, 24, 0.45);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 200ms ease;
+  transition: opacity 200ms ease-out;
 }
 
 .drawer-backdrop.is-open {
@@ -2638,7 +2632,7 @@ html {
   background: var(--panel);
   text-align: left;
   cursor: pointer;
-  transition: border-color 160ms ease, transform 160ms ease, background 160ms ease;
+  transition: border-color 160ms ease-out, transform 160ms ease-out, background 160ms ease-out;
 }
 
 .flashcard:hover { border-color: var(--accent); }
@@ -3036,7 +3030,7 @@ html {
 }
 
 .progress-ring__arc {
-  transition: stroke-dashoffset 400ms ease;
+  transition: stroke-dashoffset 400ms ease-out;
 }
 
 .progress-ring__label {
@@ -3068,7 +3062,7 @@ html {
 .mastery-meter__fill {
   height: 100%;
   background: linear-gradient(90deg, var(--accent), #1a818a);
-  transition: width 400ms ease;
+  transition: width 400ms ease-out;
 }
 
 .mastery-meter__pct {
@@ -3087,7 +3081,7 @@ html {
 }
 
 .xp-badge.is-earned {
-  animation: rise 300ms ease;
+  animation: rise 300ms ease-out;
 }
 
 .ui-card {
@@ -3773,7 +3767,7 @@ html[data-theme='light'] {
   white-space: nowrap;
   color: var(--ink-soft);
   text-decoration: none;
-  transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+  transition: background 140ms ease-out, color 140ms ease-out, border-color 140ms ease-out;
 }
 
 .arc-nav a:hover {
@@ -4447,7 +4441,7 @@ p.lead {
   color: inherit;
   text-decoration: none;
   box-shadow: var(--glow-soft);
-  transition: transform 160ms ease, box-shadow 160ms ease;
+  transition: transform 160ms ease-out, box-shadow 160ms ease-out;
 }
 
 .home-next__card:hover {
@@ -4561,8 +4555,8 @@ p.lead {
   color: var(--ink-soft);
   text-decoration: none;
   font-variant-numeric: tabular-nums;
-  transition: transform 140ms ease, box-shadow 140ms ease,
-    border-color 140ms ease;
+  transition: transform 140ms ease-out, box-shadow 140ms ease-out,
+    border-color 140ms ease-out;
 }
 
 .home-node:hover {
@@ -4744,7 +4738,7 @@ html[data-theme='light'] .home-next__num {
   border-radius: var(--r-md);
   font-size: 0.82rem;
   font-weight: 600;
-  transition: background 120ms ease, border-color 120ms ease, color 120ms ease;
+  transition: background 120ms ease-out, border-color 120ms ease-out, color 120ms ease-out;
 }
 
 .btn-primary {
@@ -5095,6 +5089,134 @@ p.lead {
   .page-hero__title,
   .page-hero__meta {
     padding-right: 4.5rem;
+  }
+}
+
+
+/* ==========================================================================
+   Press feedback & environment preferences
+   ========================================================================== */
+
+/*
+ * Every control acknowledged only on click, so the whole UI felt a beat
+ * behind the finger. Feedback belongs on pointer-down.
+ */
+
+/* Base transition so the press eases back out; without it these controls
+   have transition-duration 0 and snap on release. */
+.stat-chip,
+.icon-btn,
+.home-node,
+.home-next__card,
+.formula-tab,
+.confidence__dot,
+.calc-key,
+.option-row {
+  transition: transform 120ms ease-out, background 120ms ease-out,
+    border-color 120ms ease-out;
+}
+
+.btn-primary:active:not(:disabled),
+.btn-ghost:active:not(:disabled),
+.btn-signal:active:not(:disabled),
+.stat-chip:active,
+.icon-btn:active,
+.home-node:active,
+.arc-nav a:active,
+.day-nav-link:not(.is-locked):active,
+.home-next__card:active,
+.formula-tab:active,
+.confidence__dot:active,
+.calc-key:active {
+  transform: scale(0.97);
+  transition-duration: 60ms;
+}
+
+/* Surfaces darken under the finger as well as shrinking, so the press still
+   registers on controls too large for the scale to be obvious. */
+.btn-ghost:active:not(:disabled),
+.stat-chip:active,
+.icon-btn:active,
+.day-nav-link:not(.is-locked):active,
+.home-next__card:active,
+.home-node:active {
+  background: color-mix(in srgb, var(--ink) 12%, transparent);
+}
+
+.btn-primary:active:not(:disabled),
+.btn-signal:active:not(:disabled) {
+  filter: brightness(0.92);
+}
+
+.option-row:active {
+  border-color: var(--accent);
+}
+
+/* Scaling on press is vestibular-neutral, but honour the preference anyway
+   and fall back to the tint alone. */
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary:active:not(:disabled),
+  .btn-ghost:active:not(:disabled),
+  .btn-signal:active:not(:disabled),
+  .stat-chip:active,
+  .icon-btn:active,
+  .home-node:active,
+  .arc-nav a:active,
+  .day-nav-link:not(.is-locked):active,
+  .home-next__card:active,
+  .formula-tab:active,
+  .confidence__dot:active,
+  .calc-key:active {
+    transform: none;
+  }
+}
+
+/* Three translucent layers ship in this UI; make them solid on request. */
+@media (prefers-reduced-transparency: reduce) {
+  .topbar,
+  .arc-nav {
+    background: var(--paper);
+    backdrop-filter: none;
+  }
+
+  .sidebar-panel {
+    background: var(--paper);
+  }
+
+  .day-view,
+  .exam-mode,
+  .analytics-dash,
+  .home {
+    background: var(--panel);
+    backdrop-filter: none;
+  }
+}
+
+/* Solid surfaces and a defined border on every edge that normally relies on
+   a low-contrast hairline. */
+@media (prefers-contrast: more) {
+  :root {
+    --line: color-mix(in srgb, var(--ink) 45%, transparent);
+    --line-strong: var(--ink-soft);
+    --muted: var(--ink-soft);
+  }
+
+  .topbar,
+  .arc-nav {
+    background: var(--paper);
+    backdrop-filter: none;
+  }
+
+  .btn-ghost,
+  .stat-chip,
+  .icon-btn,
+  .home-node,
+  .option-row {
+    border-color: var(--ink-soft);
+  }
+
+  *:focus-visible {
+    outline-width: 3px;
   }
 }
 
