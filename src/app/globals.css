@@ -5220,6 +5220,96 @@ p.lead {
   }
 }
 
+
+/* ---------- Touch targets ----------
+ *
+ * Apple's 44x44 minimum is a *touch* rule, and the density that makes this
+ * read as a product is worth keeping for a mouse. So the hit area grows only
+ * on coarse pointers, via an overlay — the visual box never changes.
+ */
+
+@media (pointer: coarse) {
+  .stat-chip,
+  .icon-btn,
+  .btn-primary,
+  .btn-ghost,
+  .btn-signal,
+  .arc-nav a,
+  .home-node,
+  .confidence__dot,
+  .formula-tab,
+  .score-chip,
+  .day-nav-link {
+    position: relative;
+  }
+
+  .stat-chip::after,
+  .icon-btn::after,
+  .btn-primary::after,
+  .btn-ghost::after,
+  .btn-signal::after,
+  .arc-nav a::after,
+  .home-node::after,
+  .confidence__dot::after,
+  .formula-tab::after,
+  .day-nav-link::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+    /* Hit area only — never paints, never blocks the control's own cursor. */
+    pointer-events: auto;
+  }
+
+  /* Dense grids would overlap once every node claimed 44px, so give these
+     the real estate instead of an overlay. */
+  .home-node {
+    height: 2.75rem;
+    width: 2.75rem;
+  }
+
+  .home-node::after {
+    display: none;
+  }
+}
+
+
+/* ---------- Sheets ----------
+ *
+ * The transform is owned by the spring in useSheetGesture, not by a class, so
+ * there is nothing here to fight it. The sheet starts off-canvas for the
+ * frame before the effect paints its real position.
+ */
+
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(4, 6, 10, 0.45);
+  opacity: 0;
+}
+
+/*
+ * The gesture sets --sheet-x, never `transform` directly. That keeps the
+ * transform declaration in CSS, so the desktop rule below always wins and a
+ * left-over offset can never push the static rail off-screen.
+ */
+@media (max-width: 1023px) {
+  .sidebar-panel.is-sheet {
+    transform: translate3d(var(--sheet-x, -100%), 0, 0);
+    will-change: transform;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sidebar-panel.is-sheet {
+    transform: none;
+  }
+}
+
 /* ---------- Responsive visibility helpers ----------
  *
  * Tailwind is imported at the top of this file, so its display utilities
