@@ -1,50 +1,73 @@
 @import "tailwindcss";
 
 :root {
-  --ink: #e8eef3;
-  --ink-soft: #b4c2ce;
-  --muted: #7a8d9c;
-  --paper: #0c1116;
-  --panel: #141b22;
-  --line: #24303a;
-  --line-strong: #3a4a58;
-  --accent: #3db8b0;
-  --accent-soft: rgba(61, 184, 176, 0.14);
-  --signal: #e8a066;
-  --signal-soft: rgba(232, 160, 102, 0.16);
-  --ok: #4ec9a8;
-  --ok-soft: rgba(78, 201, 168, 0.15);
-  --formula-bg: #1a2830;
-  --formula-ink: #9ee5df;
+  /* Neutral near-black; the accent is for interactive state, nothing else. */
+  --ink: #e9eaee;
+  --ink-soft: #a8adb8;
+  /* Measured 4.40:1 on --panel-high at #7d838f; this clears AA. */
+  --muted: #868c98;
+  --paper: #0b0c0e;
+  --panel: #131418;
+  --panel-high: #1a1c21;
+  --line: #24262c;
+  --line-strong: #34373f;
+  --accent: #7c9cff;
+  --accent-soft: rgba(124, 156, 255, 0.14);
+  --signal: #e0a458;
+  --signal-soft: rgba(224, 164, 88, 0.14);
+  --ok: #5cb890;
+  --ok-soft: rgba(92, 184, 144, 0.14);
+  --formula-bg: #16181d;
+  --formula-ink: #a9c2ff;
   --background: var(--paper);
   --foreground: var(--ink);
   --math-font: var(--font-math), "KaTeX_Main", "Cambria Math", Georgia, serif;
-  --elevation: 0 1px 0 rgba(255,255,255,0.04), 0 12px 40px rgba(0,0,0,0.35);
-  --chart-1: #3db8b0;
-  --chart-2: #e8a066;
-  --chart-3: #7aa2ff;
-  --chart-4: #c9a0ff;
-  --chart-5: #f0d56e;
+
+  --r-sm: 6px;
+  --r-md: 8px;
+  --r-lg: 12px;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 4px 20px rgba(0, 0, 0, 0.45);
+  --elevation: var(--shadow-md);
+  --ring-accent: 0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent);
+
+  --chart-1: #7c9cff;
+  --chart-2: #5cb890;
+  --chart-3: #e0a458;
+  --chart-4: #b98ce0;
+  --chart-5: #6fb4c9;
 }
 
 html[data-theme='light'] {
-  --ink: #14202c;
-  --ink-soft: #3a4d5e;
-  /* Clears 4.5:1 on both --paper and --panel; #677b8c measured 4.27:1. */
-  --muted: #5a6c7d;
-  --paper: #eef2f5;
-  --panel: #fbfcfd;
-  --line: #d9e1e8;
-  --line-strong: #b8c5d0;
-  --accent: #0f5c63;
-  --accent-soft: #dceced;
-  --signal: #a34b12;
-  --signal-soft: #f6e6d8;
-  --ok: #1a6b5c;
-  --ok-soft: #eef8f4;
-  --formula-bg: #e8f3f3;
-  --formula-ink: #0d454a;
-  --elevation: 0 1px 2px rgba(21, 32, 43, 0.04), 0 18px 40px rgba(21, 32, 43, 0.05);
+  --ink: #14161a;
+  --ink-soft: #40454e;
+  --muted: #5f6572;
+  --paper: #f5f6f8;
+  --panel: #ffffff;
+  --panel-high: #ffffff;
+  --line: #e4e6eb;
+  --line-strong: #c9cdd6;
+  --accent: #2f4fd8;
+  --accent-soft: #eaeeff;
+  --signal: #9a5b12;
+  --signal-soft: #fbf0e2;
+  --ok: #14724f;
+  --ok-soft: #e8f5ef;
+  --formula-bg: #f2f4f9;
+  --formula-ink: #2b3f8f;
+
+  --shadow-sm: 0 1px 2px rgba(16, 20, 28, 0.06);
+  --shadow-md: 0 1px 3px rgba(16, 20, 28, 0.08);
+  --shadow-lg: 0 2px 12px rgba(16, 20, 28, 0.08);
+  --elevation: var(--shadow-md);
+
+  --chart-1: #2f4fd8;
+  --chart-2: #14724f;
+  --chart-3: #9a5b12;
+  --chart-4: #6b3fb5;
+  --chart-5: #12657a;
 }
 
 @theme inline {
@@ -118,7 +141,7 @@ sub { top: 0.15em; }
   font-weight: 600;
   text-decoration: none;
   transform: translateY(-160%);
-  transition: transform 140ms ease;
+  transition: transform 140ms ease-out;
 }
 
 .skip-link:focus-visible {
@@ -132,17 +155,11 @@ sub { top: 0.15em; }
   position: fixed;
   inset: 0;
   z-index: -1;
-  background:
-    radial-gradient(ellipse 80% 50% at 0% -10%, rgba(61, 184, 176, 0.12), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(232, 160, 102, 0.06), transparent 50%),
-    linear-gradient(180deg, #0e141a 0%, #0c1116 55%, #0a0f14 100%);
+  background: var(--paper);
 }
 
 html[data-theme='light'] .atmosphere {
-  background:
-    radial-gradient(ellipse 80% 50% at 0% -10%, rgba(15, 92, 99, 0.1), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(163, 75, 18, 0.06), transparent 50%),
-    linear-gradient(180deg, #f3f6f8 0%, #e9eef2 55%, #e2e8ee 100%);
+  background: var(--paper);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -248,7 +265,9 @@ html[data-theme='light'] .atmosphere {
   top: 0;
   z-index: 30;
   border-bottom: 1px solid var(--line);
-  background: rgba(243, 246, 248, 0.9);
+  /* Derived from --paper: hardcoding this is how the header ended up two
+     palettes behind the body it sits against. */
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
   backdrop-filter: blur(14px);
 }
 
@@ -382,7 +401,7 @@ html[data-theme='light'] .atmosphere {
 
 .sidebar-panel {
   border-right: 1px solid var(--line);
-  background: rgba(248, 250, 252, 0.98);
+  background: color-mix(in srgb, var(--paper) 96%, transparent);
 }
 
 .phase-label {
@@ -407,7 +426,7 @@ html[data-theme='light'] .atmosphere {
   border: 1px solid transparent;
   color: inherit;
   text-decoration: none;
-  transition: background 140ms ease, border-color 140ms ease;
+  transition: background 140ms ease-out, border-color 140ms ease-out;
 }
 
 .day-nav-link:hover { background: rgba(15, 92, 99, 0.06); }
@@ -504,49 +523,6 @@ html[data-theme='light'] .atmosphere {
     0 1px 2px rgba(21, 32, 43, 0.04),
     0 18px 40px rgba(21, 32, 43, 0.05);
   animation: rise 460ms ease both;
-}
-
-.day-hero {
-  position: relative;
-  margin: -0.15rem 0 1.75rem;
-  padding-bottom: 1.25rem;
-  border-bottom: 1px solid var(--line);
-  overflow: hidden;
-}
-
-.day-hero__numeral {
-  position: absolute;
-  top: 45%;
-  right: -0.4rem;
-  transform: translateY(-50%);
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(5.5rem, 18vw, 8.5rem);
-  font-weight: 800;
-  line-height: 1;
-  color: rgba(21, 32, 43, 0.05);
-  user-select: none;
-  pointer-events: none;
-}
-
-.day-hero__kicker {
-  margin: 0;
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--accent);
-}
-
-.day-hero h1 {
-  position: relative;
-  margin: 0.45rem 0 0;
-  max-width: 16ch;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: clamp(1.65rem, 4.2vw, 2.35rem);
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
-  color: var(--ink);
 }
 
 .hero-chips {
@@ -717,7 +693,7 @@ html[data-theme='light'] .atmosphere {
   font-weight: 700;
   letter-spacing: 0.02em;
   cursor: pointer;
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition: background 0.15s ease-out, border-color 0.15s ease-out;
 }
 
 .formula-clip-btn:hover,
@@ -1161,7 +1137,7 @@ html[data-theme='light'] .atmosphere {
   word-spacing: 0.06em;
   font-variant-numeric: tabular-nums;
   line-height: 1.45;
-  transition: border-color 140ms ease, background 140ms ease;
+  transition: border-color 140ms ease-out, background 140ms ease-out;
 }
 
 .option-row:hover { border-color: var(--line-strong); }
@@ -1347,7 +1323,7 @@ html[data-theme='light'] .atmosphere {
   font-weight: 700;
   font-size: 0.88rem;
   cursor: pointer;
-  transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+  transition: transform 140ms ease-out, background 140ms ease-out, border-color 140ms ease-out;
 }
 
 /* Both of these paint on `--ink`/`--panel`, which invert with the theme, so
@@ -1423,7 +1399,7 @@ html[data-theme='light'] .atmosphere {
   font-weight: 700;
   color: var(--ink);
   text-decoration: none;
-  transition: border-color 140ms ease, transform 140ms ease;
+  transition: border-color 140ms ease-out, transform 140ms ease-out;
 }
 
 .day-footer-nav a:hover {
@@ -1518,43 +1494,29 @@ html[data-theme='light'] .atmosphere {
 /* ---------- Dark mode ---------- */
 
 html[data-theme='dark'] {
-  --ink: #e8eef4;
-  --ink-soft: #b6c3d0;
-  --muted: #8a9aab;
-  --paper: #0f141b;
-  --panel: #171e28;
-  --line: #2a3544;
-  --line-strong: #3d4d60;
-  --accent: #3db8c0;
-  --accent-soft: #1a3338;
-  --signal: #e08a4d;
-  --signal-soft: #3a2a1c;
-  --ok: #4ec9b0;
-  --formula-bg: #1a2c30;
-  --formula-ink: #9fd8dc;
+  --ink: #e9eaee;
+  --ink-soft: #a8adb8;
+  /* Measured 4.40:1 on --panel-high at #7d838f; this clears AA. */
+  --muted: #868c98;
+  --paper: #0b0c0e;
+  --panel: #131418;
+  --panel-high: #1a1c21;
+  --line: #24262c;
+  --line-strong: #34373f;
+  --accent: #7c9cff;
+  --accent-soft: rgba(124, 156, 255, 0.14);
+  --signal: #e0a458;
+  --signal-soft: rgba(224, 164, 88, 0.14);
+  --ok: #5cb890;
+  --ok-soft: rgba(92, 184, 144, 0.14);
+  --formula-bg: #16181d;
+  --formula-ink: #a9c2ff;
   --background: var(--paper);
   --foreground: var(--ink);
   color-scheme: dark;
 }
 
-html[data-theme='dark'] .atmosphere {
-  background:
-    radial-gradient(ellipse 80% 50% at 0% -10%, rgba(61, 184, 192, 0.12), transparent 55%),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(224, 138, 77, 0.08), transparent 50%),
-    linear-gradient(180deg, #121820 0%, #0f141b 55%, #0c1016 100%);
-}
 
-html[data-theme='dark'] .topbar {
-  background: rgba(15, 20, 27, 0.88);
-}
-
-html[data-theme='dark'] .sidebar-panel {
-  background: rgba(23, 30, 40, 0.98);
-}
-
-html[data-theme='dark'] .day-hero__numeral {
-  color: rgba(232, 238, 244, 0.06);
-}
 
 html[data-theme='dark'] .day-footer-nav a {
   background: var(--panel);
@@ -2317,7 +2279,7 @@ html[data-theme='dark'] .real-world__try {
   font-size: 0.72rem;
   font-weight: 600;
   color: var(--muted);
-  transition: color 200ms ease;
+  transition: color 200ms ease-out;
 }
 
 .notes-saved.is-on {
@@ -2377,7 +2339,7 @@ html {
 .goal-track__fill {
   height: 100%;
   background: linear-gradient(90deg, var(--accent), #1a818a);
-  transition: width 400ms ease;
+  transition: width 400ms ease-out;
 }
 
 .sidebar-dash__meta {
@@ -2491,7 +2453,7 @@ html {
   background: rgba(10, 16, 24, 0.45);
   opacity: 0;
   pointer-events: none;
-  transition: opacity 200ms ease;
+  transition: opacity 200ms ease-out;
 }
 
 .drawer-backdrop.is-open {
@@ -2670,7 +2632,7 @@ html {
   background: var(--panel);
   text-align: left;
   cursor: pointer;
-  transition: border-color 160ms ease, transform 160ms ease, background 160ms ease;
+  transition: border-color 160ms ease-out, transform 160ms ease-out, background 160ms ease-out;
 }
 
 .flashcard:hover { border-color: var(--accent); }
@@ -3068,7 +3030,7 @@ html {
 }
 
 .progress-ring__arc {
-  transition: stroke-dashoffset 400ms ease;
+  transition: stroke-dashoffset 400ms ease-out;
 }
 
 .progress-ring__label {
@@ -3100,7 +3062,7 @@ html {
 .mastery-meter__fill {
   height: 100%;
   background: linear-gradient(90deg, var(--accent), #1a818a);
-  transition: width 400ms ease;
+  transition: width 400ms ease-out;
 }
 
 .mastery-meter__pct {
@@ -3119,7 +3081,7 @@ html {
 }
 
 .xp-badge.is-earned {
-  animation: rise 300ms ease;
+  animation: rise 300ms ease-out;
 }
 
 .ui-card {
@@ -3514,17 +3476,6 @@ html {
   padding: 0 0.5rem 2rem;
 }
 
-.analytics-dash__hero h1 {
-  margin: 0;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 1.75rem;
-}
-
-.analytics-dash__hero p {
-  margin: 0.35rem 0 1.25rem;
-  color: var(--ink-soft);
-}
-
 .analytics-dash__stats {
   display: grid;
   gap: 0.75rem;
@@ -3622,13 +3573,6 @@ html {
   color: var(--muted);
 }
 .exam-mode { max-width: 48rem; }
-.exam-mode__head {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.75rem;
-  align-items: center;
-  margin-bottom: 1.25rem;
-}
 .exam-mode__timer {
   display: inline-flex;
   gap: 0.35rem;
@@ -3740,45 +3684,6 @@ html[data-theme='light'] {
   box-shadow: var(--shadow-lg);
 }
 
-/* ---- Hero ---- */
-
-.day-hero {
-  margin-bottom: 2rem;
-  padding-bottom: 1.5rem;
-}
-
-/* Sit the watermark behind the title instead of letting it clip on the edge. */
-.day-hero__numeral {
-  top: 50%;
-  right: 0;
-  font-size: clamp(4.5rem, 12vw, 7.5rem);
-  letter-spacing: -0.05em;
-  color: color-mix(in srgb, var(--accent) 12%, transparent);
-}
-
-.day-hero__kicker {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.68rem;
-  letter-spacing: 0.18em;
-}
-
-.day-hero__kicker::before {
-  content: '';
-  width: 1.6rem;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--accent);
-}
-
-.day-hero h1 {
-  margin-top: 0.7rem;
-  max-width: 20ch;
-  font-size: clamp(1.8rem, 4.4vw, 2.6rem);
-  line-height: 1.08;
-}
-
 .hero-chips {
   margin-top: 1.15rem;
   gap: 0.4rem;
@@ -3798,14 +3703,6 @@ html[data-theme='light'] {
   .day-view {
     padding: 1.25rem 1.1rem 3rem;
     border-radius: 16px;
-  }
-  /* The title fills the card at this width, so the watermark would sit on
-     top of the words rather than behind empty space. */
-  .day-hero__numeral {
-    display: none;
-  }
-  .day-hero h1 {
-    max-width: none;
   }
 }
 
@@ -3870,7 +3767,7 @@ html[data-theme='light'] {
   white-space: nowrap;
   color: var(--ink-soft);
   text-decoration: none;
-  transition: background 140ms ease, color 140ms ease, border-color 140ms ease;
+  transition: background 140ms ease-out, color 140ms ease-out, border-color 140ms ease-out;
 }
 
 .arc-nav a:hover {
@@ -4076,38 +3973,46 @@ p.lead {
   border-radius: 12px;
 }
 
-/* ---- Hero → content spacing ---- */
-
-.day-hero {
-  padding-bottom: 1.35rem;
-  margin-bottom: 1.5rem;
-}
-
 .kg-panel {
   margin-bottom: 1.25rem;
 }
 
 
+
 /* ==========================================================================
-   Bold editorial pass
-   Arriving at a day should read like opening a chapter: a full-bleed header
-   band carries the number, title and progress, a connected rail shows the
-   seven steps, and section markers are set as display numerals.
+   Editorial system
+   One full-bleed band, one gutter, one section-marker style — shared by the
+   day, exam and analytics routes so arriving anywhere feels the same.
    ========================================================================== */
 
-.day-view {
+.day-view,
+.exam-mode,
+.analytics-dash {
+  position: relative;
   max-width: 48rem;
+  margin: 0 auto;
   padding: 0 0 4.5rem;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--panel);
+  box-shadow: var(--shadow-lg);
   overflow: hidden;
 }
 
-/* ---- Chapter band ---- */
+/* The band bleeds edge to edge, so siblings carry their own gutter. */
+.day-view > *:not(.page-hero),
+.exam-mode > *:not(.page-hero),
+.analytics-dash > *:not(.page-hero) {
+  padding-left: 2.25rem;
+  padding-right: 2.25rem;
+}
 
-.day-hero {
+/* ---- Band ---- */
+
+.page-hero {
   position: relative;
-  margin: 0 0 1.5rem;
+  margin: 0 0 1.75rem;
   padding: 2.25rem 2.25rem 2rem;
-  border: 0;
   border-bottom: 1px solid var(--line);
   overflow: hidden;
   background:
@@ -4123,21 +4028,23 @@ p.lead {
     );
 }
 
-/* Cropped along the bottom edge on purpose; keep it clear of the right edge
-   so it never looks like a glyph that simply ran out of room. */
-.day-hero__numeral {
-  top: auto;
+/* Cropped along the bottom on purpose; kept clear of the right edge so it
+   never looks like a glyph that simply ran out of room. */
+.page-hero__watermark {
+  position: absolute;
   bottom: -1.9rem;
   right: 1.75rem;
-  transform: none;
+  font-family: var(--font-display), Georgia, serif;
   font-size: clamp(6.5rem, 13vw, 10.5rem);
   font-weight: 800;
-  letter-spacing: -0.06em;
   line-height: 0.8;
+  letter-spacing: -0.06em;
   color: color-mix(in srgb, var(--accent) 14%, transparent);
+  user-select: none;
+  pointer-events: none;
 }
 
-.day-hero__top {
+.page-hero__top {
   position: relative;
   display: flex;
   align-items: flex-start;
@@ -4145,33 +4052,43 @@ p.lead {
   gap: 1rem;
 }
 
-.day-hero__kicker {
+.page-hero__eyebrow {
+  display: inline-flex;
+  align-items: center;
   gap: 0.55rem;
+  margin: 0;
   font-size: 0.7rem;
+  font-weight: 700;
   letter-spacing: 0.24em;
+  text-transform: uppercase;
   color: var(--accent);
 }
 
-.day-hero__kicker::before {
+.page-hero__eyebrow::before {
+  content: '';
   width: 2rem;
   height: 2px;
+  border-radius: 2px;
+  background: var(--accent);
 }
 
-.day-hero__ring {
+.page-hero__aside {
   flex: none;
 }
 
-.day-hero h1 {
+.page-hero__title {
   position: relative;
   margin: 1rem 0 0;
   max-width: 17ch;
+  font-family: var(--font-display), Georgia, serif;
   font-size: clamp(2.1rem, 5.4vw, 3.35rem);
   font-weight: 800;
   letter-spacing: -0.035em;
   line-height: 1.02;
+  color: var(--ink);
 }
 
-.day-hero__meta {
+.page-hero__meta {
   position: relative;
   display: flex;
   flex-wrap: wrap;
@@ -4183,34 +4100,40 @@ p.lead {
   color: var(--muted);
 }
 
-.day-hero__meta > span {
+.page-hero__fact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.page-hero__fact > span:not(.page-hero__sep) {
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
 }
 
-.day-hero__meta .is-done {
+/* Decorative, but --line-strong made it all but invisible. */
+.page-hero__sep {
+  color: var(--muted);
+}
+
+.page-hero__meta .is-done {
   color: var(--accent);
   font-weight: 700;
 }
 
-.day-hero__meta .is-open {
+.page-hero__meta .is-open {
   color: var(--signal);
   font-weight: 700;
 }
 
-.hero-chips {
+.page-hero__actions {
   position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
   margin-top: 1.15rem;
-}
-
-/* ---- Body gutter ----
-   The band bleeds to the card edge, so everything after it needs its own
-   horizontal padding rather than inheriting it from .day-view. */
-
-.day-view > *:not(.day-hero) {
-  padding-left: 2.25rem;
-  padding-right: 2.25rem;
 }
 
 /* ---- Connected step rail ---- */
@@ -4226,13 +4149,13 @@ p.lead {
   gap: 0;
 }
 
-/* Hairline through the numerals turns seven pills into one sequence. */
 .arc-nav__list li {
   position: relative;
   display: flex;
   align-items: center;
 }
 
+/* Hairlines between the numerals make seven pills read as one sequence. */
 .arc-nav__list li:not(:last-child)::after {
   content: '';
   width: 0.85rem;
@@ -4259,12 +4182,17 @@ p.lead {
   margin-bottom: 3.5rem;
 }
 
+.section-head,
+.exam-mode > section > h2,
+.analytics-dash h2 {
+  border-bottom: 2px solid var(--ink);
+}
+
 .section-head {
   align-items: baseline;
   gap: 0.85rem;
   margin-bottom: 1.1rem;
   padding-bottom: 0.7rem;
-  border-bottom: 2px solid var(--ink);
 }
 
 .section-head__num {
@@ -4291,24 +4219,1094 @@ p.lead {
   flex: none;
 }
 
+/* Exam and analytics use bare h2s rather than the numbered SectionHead. */
+.exam-mode > section > h2,
+.analytics-dash h2 {
+  margin: 2.5rem 0 1.1rem;
+  padding-bottom: 0.7rem;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: clamp(1.25rem, 2.6vw, 1.6rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.exam-mode > section:first-of-type > h2,
+.analytics-dash h2:first-of-type {
+  margin-top: 0;
+}
+
+/* ---- Exam timer ---- */
+
+.exam-mode__timer {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.85rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--accent) 38%, transparent);
+  font-size: 1.05rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  color: var(--accent);
+}
+
+.exam-mode__timer.is-urgent {
+  background: color-mix(in srgb, var(--signal) 16%, transparent);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--signal) 42%, transparent);
+  color: var(--signal);
+}
+
 @media (max-width: 639px) {
-  .day-hero {
+  .day-view,
+  .exam-mode,
+  .analytics-dash {
+    border-radius: 16px;
+  }
+  .page-hero {
     padding: 1.6rem 1.15rem 1.5rem;
   }
-  .day-view > *:not(.day-hero) {
+  .day-view > *:not(.page-hero),
+  .exam-mode > *:not(.page-hero),
+  .analytics-dash > *:not(.page-hero) {
     padding-left: 1.15rem;
     padding-right: 1.15rem;
   }
-  .day-hero__numeral {
-    display: block;
-    bottom: -1.8rem;
-    font-size: 7rem;
+  .page-hero__watermark {
+    bottom: -1.4rem;
+    right: 1rem;
+    font-size: 6.5rem;
   }
-  .day-hero h1 {
+  .page-hero__title {
     max-width: none;
   }
   .section-head__num {
     font-size: 1.5rem;
+  }
+}
+
+
+/* ---------- Syllabus as a journey spine ----------
+ *
+ * A flat list of twenty links gave no sense of a route through the course.
+ * A rail behind the day markers turns it into a visible path: filled behind
+ * finished days, hollow ahead of them.
+ */
+
+.day-nav-list {
+  position: relative;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* The rail sits under the markers, inset to their centre line. */
+.day-nav-list::before {
+  content: '';
+  position: absolute;
+  top: 1.35rem;
+  bottom: 1.35rem;
+  left: calc(0.55rem + 0.825rem);
+  width: 2px;
+  border-radius: 2px;
+  background: var(--line);
+}
+
+.day-nav-link {
+  position: relative;
+  gap: 0.7rem;
+  min-height: 2.6rem;
+  border-radius: 9px;
+}
+
+.day-nav-link:hover {
+  background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.day-nav-link.is-active {
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  background: color-mix(in srgb, var(--accent) 11%, transparent);
+  box-shadow: var(--ring-accent);
+}
+
+.day-nav-link.is-locked {
+  cursor: not-allowed;
+  opacity: 1;
+}
+
+.day-nav-link.is-locked .day-num--locked,
+.day-nav-link.is-locked span {
+  color: var(--muted);
+}
+
+/* Markers ride on top of the rail, so they need an opaque backing. */
+.day-num {
+  position: relative;
+  z-index: 1;
+  height: 1.65rem;
+  width: 1.65rem;
+  border-radius: 999px;
+  background: var(--panel);
+  box-shadow: 0 0 0 3px var(--panel);
+}
+
+.day-num--done {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper);
+}
+
+.day-num--locked {
+  background: var(--panel);
+  border-style: dashed;
+}
+
+.day-nav-link.is-active .day-num {
+  box-shadow: 0 0 0 3px var(--panel), 0 0 0 5px
+    color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.phase-label {
+  margin: 1.5rem 0 0.5rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+}
+
+.upnext-chip,
+.locked-chip,
+.score-chip {
+  flex: none;
+  font-size: 0.6rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+
+/* ---------- Home: mission control ----------
+ *
+ * `/` used to redirect straight into a lesson, so the course had no front
+ * door. These are the surfaces of the dashboard that replaced it.
+ */
+
+.home {
+  position: relative;
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 0 0 4.5rem;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: color-mix(in srgb, var(--panel) 92%, transparent);
+  backdrop-filter: blur(10px);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+}
+
+.home > *:not(.page-hero) {
+  padding-left: 2.25rem;
+  padding-right: 2.25rem;
+}
+
+.home::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 12%;
+  right: 12%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--accent) 55%, transparent),
+    transparent
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ---- Up next ---- */
+
+.home-next__card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.1rem 1.25rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 32%, var(--line));
+  border-radius: 16px;
+  background: linear-gradient(
+    135deg,
+    color-mix(in srgb, var(--accent) 12%, var(--panel-high)),
+    var(--panel-high) 70%
+  );
+  color: inherit;
+  text-decoration: none;
+  box-shadow: var(--glow-soft);
+  transition: transform 160ms ease-out, box-shadow 160ms ease-out;
+}
+
+.home-next__card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--glow-accent);
+}
+
+.home-next__num {
+  flex: none;
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 2.4rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  color: var(--accent);
+  text-shadow: 0 0 18px color-mix(in srgb, var(--accent) 40%, transparent);
+}
+
+.home-next__body {
+  display: flex;
+  min-width: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.home-next__title {
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.home-next__meta {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.home-next__go {
+  flex: none;
+  color: var(--accent);
+}
+
+/* ---- Today ---- */
+
+.home-today {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--panel-high) 78%, transparent);
+}
+
+.home-today__row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 0.55rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--muted);
+}
+
+.home-today__row strong {
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+/* ---- The 20-day arc ---- */
+
+.home-map__phases {
+  display: grid;
+  gap: 1.1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.home-map__phase-label {
+  margin: 0 0 0.45rem;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.home-map__nodes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.home-node {
+  display: inline-flex;
+  height: 2.6rem;
+  width: 2.6rem;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--line-strong);
+  border-radius: 12px;
+  background: var(--panel-high);
+  font-family: var(--font-display), Georgia, serif;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: var(--ink-soft);
+  text-decoration: none;
+  font-variant-numeric: tabular-nums;
+  transition: transform 140ms ease-out, box-shadow 140ms ease-out,
+    border-color 140ms ease-out;
+}
+
+.home-node:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: var(--glow-soft);
+}
+
+.home-node.is-done {
+  border-color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+  color: var(--accent);
+}
+
+.home-node.is-current {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--paper);
+  box-shadow: var(--glow-accent);
+}
+
+.home-node.is-locked {
+  cursor: not-allowed;
+  border-style: dashed;
+  border-color: var(--line);
+  background: transparent;
+  color: var(--muted);
+}
+
+.home-node.is-locked:hover {
+  transform: none;
+  border-color: var(--line);
+  box-shadow: none;
+}
+
+@media (max-width: 639px) {
+  .home {
+    border-radius: 16px;
+  }
+  .home > *:not(.page-hero) {
+    padding-left: 1.15rem;
+    padding-right: 1.15rem;
+  }
+  .home-next__card {
+    gap: 0.75rem;
+    padding: 0.9rem 1rem;
+  }
+  .home-next__num {
+    font-size: 1.9rem;
+  }
+  .home-node {
+    height: 2.4rem;
+    width: 2.4rem;
+  }
+}
+
+html[data-theme='light'] .home {
+  background: var(--panel);
+  backdrop-filter: none;
+}
+
+html[data-theme='light'] .home-today {
+  background: var(--panel-high);
+}
+
+html[data-theme='light'] .home-next__num {
+  text-shadow: none;
+}
+
+
+/* ==========================================================================
+   Restraint pass
+   The previous skin leaned on gradients, glow and oversized display type,
+   which reads as decoration rather than product. Surfaces are flat, the
+   accent only marks interactive state, and density is tighter throughout.
+   ========================================================================== */
+
+/* ---- Shells ---- */
+
+.day-view,
+.exam-mode,
+.analytics-dash,
+.home {
+  max-width: 46rem;
+  border-radius: var(--r-lg);
+  background: var(--panel);
+  backdrop-filter: none;
+  box-shadow: var(--shadow-sm);
+}
+
+/* The lit top edge was pure ornament. */
+.day-view::before,
+.exam-mode::before,
+.analytics-dash::before,
+.home::before {
+  display: none;
+}
+
+.day-view > *:not(.page-hero),
+.exam-mode > *:not(.page-hero),
+.analytics-dash > *:not(.page-hero),
+.home > *:not(.page-hero) {
+  padding-left: 1.75rem;
+  padding-right: 1.75rem;
+}
+
+/* ---- Hero: a header, not a landing band ---- */
+
+.page-hero {
+  margin-bottom: 1.5rem;
+  padding: 1.75rem 1.75rem 1.5rem;
+  background: none;
+  border-bottom: 1px solid var(--line);
+}
+
+.page-hero::before,
+.page-hero::after,
+.page-hero__watermark {
+  display: none;
+}
+
+/* The aside used to sit in a flex row with the eyebrow, so a 64px ring left a
+   band of dead space above the title. Take it out of flow instead. */
+.page-hero__top {
+  display: block;
+}
+
+.page-hero__aside {
+  position: absolute;
+  top: 1.75rem;
+  right: 1.75rem;
+}
+
+.page-hero__eyebrow,
+.page-hero__title,
+.page-hero__meta {
+  padding-right: 5.5rem;
+}
+
+.page-hero__eyebrow {
+  gap: 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--muted);
+  text-shadow: none;
+}
+
+.page-hero__eyebrow::before {
+  display: none;
+}
+
+.page-hero__title {
+  margin-top: 0.5rem;
+  max-width: 24ch;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.22;
+}
+
+.page-hero__meta {
+  margin-top: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.page-hero__actions {
+  margin-top: 1.1rem;
+}
+
+/* ---- Controls ---- */
+
+.btn-primary,
+.btn-ghost,
+.btn-signal {
+  min-height: 2.25rem;
+  border-radius: var(--r-md);
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition: background 120ms ease-out, border-color 120ms ease-out, color 120ms ease-out;
+}
+
+.btn-primary {
+  padding: 0 0.9rem;
+  border: 1px solid var(--accent);
+  background: var(--accent);
+  color: var(--paper);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: none;
+  filter: brightness(1.08);
+  box-shadow: none;
+}
+
+.btn-ghost {
+  padding: 0 0.9rem;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--ink);
+}
+
+.btn-ghost:hover:not(:disabled) {
+  border-color: var(--line-strong);
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+}
+
+.btn-signal {
+  min-height: 2.4rem;
+  padding: 0 1rem;
+  border: 1px solid var(--signal);
+  background: var(--signal);
+  color: var(--paper);
+  font-weight: 700;
+}
+
+.stat-chip,
+.icon-btn {
+  border-radius: var(--r-md);
+}
+
+.stat-chip {
+  min-height: 2.1rem;
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+
+.stat-chip strong {
+  font-weight: 600;
+}
+
+/* ---- Surfaces ---- */
+
+.sidebar-dash,
+.quest-card,
+.ui-card,
+.coach-card,
+.myth-panel,
+.bridge-card,
+.teachback,
+.confidence,
+.worked-example,
+.kg-panel,
+.exam-mcq,
+.practice-card,
+.flashcard-panel,
+.match-panel,
+.panel,
+.video-item,
+.home-today {
+  border-radius: var(--r-md);
+  background: var(--panel-high);
+  box-shadow: none;
+}
+
+.real-world {
+  border-radius: var(--r-md);
+  border-color: var(--line);
+  background: var(--panel-high);
+  box-shadow: none;
+}
+
+.worked-example__header {
+  background: color-mix(in srgb, var(--accent) 7%, var(--panel-high));
+  border-bottom-color: var(--line);
+}
+
+/* ---- Section markers ---- */
+
+.section-block {
+  margin-bottom: 2.5rem;
+}
+
+.section-head {
+  gap: 0.6rem;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.section-head__num {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--muted);
+  letter-spacing: 0.04em;
+  text-shadow: none;
+}
+
+.section-head h2 {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.exam-mode > section > h2,
+.analytics-dash h2 {
+  margin: 2rem 0 0.9rem;
+  padding-bottom: 0.55rem;
+  border-bottom: 1px solid var(--line);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+
+.subhead {
+  margin: 1.6rem 0 0.6rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+/* ---- Step rail ---- */
+
+.arc-nav {
+  margin-bottom: 1.75rem;
+}
+
+.arc-nav a {
+  font-size: 0.76rem;
+  font-weight: 500;
+}
+
+.arc-nav a:hover {
+  box-shadow: none;
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  border-color: transparent;
+  color: var(--ink);
+}
+
+.arc-nav__num {
+  width: 1.35rem;
+  height: 1.35rem;
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  font-size: 0.64rem;
+  font-weight: 600;
+  text-shadow: none;
+}
+
+.arc-nav a:hover .arc-nav__num {
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--accent);
+  color: var(--accent);
+  text-shadow: none;
+}
+
+/* ---- Progress ---- */
+
+.progress-ring__arc {
+  filter: none;
+}
+
+.topbar__rail-fill,
+.goal-track__fill,
+.goal-bar > span {
+  background: var(--accent);
+  box-shadow: none;
+}
+
+/* ---- Syllabus ---- */
+
+.day-nav-link {
+  border-radius: var(--r-sm);
+  min-height: 2.35rem;
+}
+
+.day-nav-link.is-active {
+  border-color: transparent;
+  background: color-mix(in srgb, var(--ink) 8%, transparent);
+  box-shadow: none;
+}
+
+.day-num {
+  border-radius: var(--r-sm);
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 600;
+  box-shadow: 0 0 0 3px var(--panel);
+}
+
+.day-num--done {
+  background: var(--accent-soft);
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  color: var(--accent);
+  box-shadow: 0 0 0 3px var(--panel);
+}
+
+.day-nav-link.is-active .day-num {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--paper);
+  box-shadow: 0 0 0 3px var(--panel);
+}
+
+/* ---- Home ---- */
+
+.home-next__card {
+  gap: 0.85rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  background: var(--panel-high);
+  box-shadow: none;
+}
+
+.home-next__card:hover {
+  transform: none;
+  border-color: var(--line-strong);
+  background: color-mix(in srgb, var(--ink) 4%, var(--panel-high));
+  box-shadow: none;
+}
+
+.home-next__num {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-shadow: none;
+  font-variant-numeric: tabular-nums;
+}
+
+.home-next__title {
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.home-node {
+  height: 2.2rem;
+  width: 2.2rem;
+  border-radius: var(--r-sm);
+  border-color: var(--line);
+  background: transparent;
+  font-family: var(--font-body), system-ui, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.home-node:hover {
+  transform: none;
+  border-color: var(--line-strong);
+  background: color-mix(in srgb, var(--ink) 6%, transparent);
+  box-shadow: none;
+}
+
+.home-node.is-done {
+  border-color: color-mix(in srgb, var(--accent) 40%, transparent);
+  background: var(--accent-soft);
+  color: var(--accent);
+}
+
+.home-node.is-current {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: var(--paper);
+  box-shadow: none;
+}
+
+/* ---- Reading ---- */
+
+.prose-p {
+  font-size: 0.95rem;
+  line-height: 1.65;
+}
+
+.lead .prose-p,
+p.lead {
+  font-size: 1.02rem;
+  line-height: 1.6;
+}
+
+/* Chips read as labels, not badges. */
+.hero-chip,
+.mastery-badge {
+  min-height: 1.75rem;
+  border-radius: var(--r-sm);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  text-transform: none;
+  box-shadow: none;
+}
+
+.exam-mode__timer {
+  border-radius: var(--r-md);
+  background: transparent;
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.exam-mode__timer.is-urgent {
+  background: var(--signal-soft);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--signal) 45%, transparent);
+  color: var(--signal);
+}
+
+.formula-block,
+.formula-answer {
+  border-radius: var(--r-sm);
+  box-shadow: none;
+}
+
+@media (max-width: 639px) {
+  .day-view > *:not(.page-hero),
+  .exam-mode > *:not(.page-hero),
+  .analytics-dash > *:not(.page-hero),
+  .home > *:not(.page-hero) {
+    padding-left: 1.1rem;
+    padding-right: 1.1rem;
+  }
+  .page-hero {
+    padding: 1.4rem 1.1rem 1.25rem;
+  }
+  .page-hero__title {
+    font-size: 1.5rem;
+  }
+  .page-hero__aside {
+    top: 1.4rem;
+    right: 1.1rem;
+  }
+  .page-hero__eyebrow,
+  .page-hero__title,
+  .page-hero__meta {
+    padding-right: 4.5rem;
+  }
+}
+
+
+/* ==========================================================================
+   Press feedback & environment preferences
+   ========================================================================== */
+
+/*
+ * Every control acknowledged only on click, so the whole UI felt a beat
+ * behind the finger. Feedback belongs on pointer-down.
+ */
+
+/* Base transition so the press eases back out; without it these controls
+   have transition-duration 0 and snap on release. */
+.stat-chip,
+.icon-btn,
+.home-node,
+.home-next__card,
+.formula-tab,
+.confidence__dot,
+.calc-key,
+.option-row {
+  transition: transform 120ms ease-out, background 120ms ease-out,
+    border-color 120ms ease-out;
+}
+
+.btn-primary:active:not(:disabled),
+.btn-ghost:active:not(:disabled),
+.btn-signal:active:not(:disabled),
+.stat-chip:active,
+.icon-btn:active,
+.home-node:active,
+.arc-nav a:active,
+.day-nav-link:not(.is-locked):active,
+.home-next__card:active,
+.formula-tab:active,
+.confidence__dot:active,
+.calc-key:active {
+  transform: scale(0.97);
+  transition-duration: 60ms;
+}
+
+/* Surfaces darken under the finger as well as shrinking, so the press still
+   registers on controls too large for the scale to be obvious. */
+.btn-ghost:active:not(:disabled),
+.stat-chip:active,
+.icon-btn:active,
+.day-nav-link:not(.is-locked):active,
+.home-next__card:active,
+.home-node:active {
+  background: color-mix(in srgb, var(--ink) 12%, transparent);
+}
+
+.btn-primary:active:not(:disabled),
+.btn-signal:active:not(:disabled) {
+  filter: brightness(0.92);
+}
+
+.option-row:active {
+  border-color: var(--accent);
+}
+
+/* Scaling on press is vestibular-neutral, but honour the preference anyway
+   and fall back to the tint alone. */
+@media (prefers-reduced-motion: reduce) {
+  .btn-primary:active:not(:disabled),
+  .btn-ghost:active:not(:disabled),
+  .btn-signal:active:not(:disabled),
+  .stat-chip:active,
+  .icon-btn:active,
+  .home-node:active,
+  .arc-nav a:active,
+  .day-nav-link:not(.is-locked):active,
+  .home-next__card:active,
+  .formula-tab:active,
+  .confidence__dot:active,
+  .calc-key:active {
+    transform: none;
+  }
+}
+
+/* Three translucent layers ship in this UI; make them solid on request. */
+@media (prefers-reduced-transparency: reduce) {
+  .topbar,
+  .arc-nav {
+    background: var(--paper);
+    backdrop-filter: none;
+  }
+
+  .sidebar-panel {
+    background: var(--paper);
+  }
+
+  .day-view,
+  .exam-mode,
+  .analytics-dash,
+  .home {
+    background: var(--panel);
+    backdrop-filter: none;
+  }
+}
+
+/* Solid surfaces and a defined border on every edge that normally relies on
+   a low-contrast hairline. */
+@media (prefers-contrast: more) {
+  :root {
+    --line: color-mix(in srgb, var(--ink) 45%, transparent);
+    --line-strong: var(--ink-soft);
+    --muted: var(--ink-soft);
+  }
+
+  .topbar,
+  .arc-nav {
+    background: var(--paper);
+    backdrop-filter: none;
+  }
+
+  .btn-ghost,
+  .stat-chip,
+  .icon-btn,
+  .home-node,
+  .option-row {
+    border-color: var(--ink-soft);
+  }
+
+  *:focus-visible {
+    outline-width: 3px;
+  }
+}
+
+
+/* ---------- Touch targets ----------
+ *
+ * Apple's 44x44 minimum is a *touch* rule, and the density that makes this
+ * read as a product is worth keeping for a mouse. So the hit area grows only
+ * on coarse pointers, via an overlay — the visual box never changes.
+ */
+
+@media (pointer: coarse) {
+  .stat-chip,
+  .icon-btn,
+  .btn-primary,
+  .btn-ghost,
+  .btn-signal,
+  .arc-nav a,
+  .home-node,
+  .confidence__dot,
+  .formula-tab,
+  .score-chip,
+  .day-nav-link {
+    position: relative;
+  }
+
+  .stat-chip::after,
+  .icon-btn::after,
+  .btn-primary::after,
+  .btn-ghost::after,
+  .btn-signal::after,
+  .arc-nav a::after,
+  .home-node::after,
+  .confidence__dot::after,
+  .formula-tab::after,
+  .day-nav-link::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+    /* Hit area only — never paints, never blocks the control's own cursor. */
+    pointer-events: auto;
+  }
+
+  /* Dense grids would overlap once every node claimed 44px, so give these
+     the real estate instead of an overlay. */
+  .home-node {
+    height: 2.75rem;
+    width: 2.75rem;
+  }
+
+  .home-node::after {
+    display: none;
+  }
+}
+
+
+/* ---------- Sheets ----------
+ *
+ * The transform is owned by the spring in useSheetGesture, not by a class, so
+ * there is nothing here to fight it. The sheet starts off-canvas for the
+ * frame before the effect paints its real position.
+ */
+
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  background: rgba(4, 6, 10, 0.45);
+  opacity: 0;
+}
+
+/*
+ * The gesture sets --sheet-x, never `transform` directly. That keeps the
+ * transform declaration in CSS, so the desktop rule below always wins and a
+ * left-over offset can never push the static rail off-screen.
+ */
+@media (max-width: 1023px) {
+  .sidebar-panel.is-sheet {
+    transform: translate3d(var(--sheet-x, -100%), 0, 0);
+    will-change: transform;
+  }
+}
+
+@media (min-width: 1024px) {
+  .sidebar-panel.is-sheet {
+    transform: none;
   }
 }
 

@@ -7,6 +7,7 @@ import { useProgress } from '@/context/ProgressContext'
 import { curriculum } from '@/lib/curriculum'
 import { maxUnlockedDay } from '@/lib/storage'
 import { useDialog } from '@/lib/useDialog'
+import { useSheetGesture } from '@/lib/useSheetGesture'
 import { SciCalculator } from '@/components/study/SciCalculator'
 import { ProgressBackup } from '@/components/study/ProgressBackup'
 import { QuestCard } from '@/components/study/QuestCard'
@@ -40,7 +41,18 @@ export function Sidebar({
   const { state, ready, dayStatus, dueSrsItems, dailyGoalProgress } =
     useProgress()
   const panelRef = useRef<HTMLElement>(null)
+  const backdropRef = useRef<HTMLDivElement>(null)
   useDialog(open, onClose, panelRef)
+  // Below `lg` the syllabus is a real sheet: draggable, and interruptible
+  // mid-animation. On desktop it is a static rail, so the gesture is off.
+  useSheetGesture({
+    open,
+    onClose,
+    panelRef,
+    backdropRef,
+    side: 'left',
+    disabled: isDesktop,
+  })
   const completedDays = ready ? state.completedDays : []
   const unlocked = ready ? maxUnlockedDay(state) : 1
   const upNext = unlocked
@@ -53,11 +65,13 @@ export function Sidebar({
   return (
     <>
       <div
-        className={`fixed inset-0 z-40 bg-[#101f2e]/40 transition lg:hidden ${
-          open ? 'opacity-100' : 'pointer-events-none opacity-0'
+        ref={backdropRef}
+        className={`sheet-backdrop lg:hidden ${
+          open ? '' : 'pointer-events-none'
         }`}
+        style={{ opacity: open ? 1 : 0 }}
         onClick={onClose}
-        aria-hidden={!open}
+        aria-hidden
       />
 
       <aside
@@ -68,9 +82,7 @@ export function Sidebar({
         aria-modal={isDesktop ? undefined : open}
         // Off-canvas but still painted: keep it out of the tab order when shut.
         inert={!isDesktop && !open}
-        className={`sidebar-panel fixed inset-y-0 left-0 z-50 w-[min(20rem,92vw)] overflow-y-auto px-3 py-4 transition-transform lg:sticky lg:top-[4.2rem] lg:z-0 lg:h-[calc(100vh-4.2rem)] lg:w-auto lg:translate-x-0 lg:px-0 lg:py-4 ${
-          open ? 'translate-x-0' : '-translate-x-full'
-        }`}
+        className="sidebar-panel is-sheet fixed inset-y-0 left-0 z-50 w-[min(20rem,92vw)] touch-pan-y overflow-y-auto px-3 py-4 lg:sticky lg:top-[4.2rem] lg:z-0 lg:h-[calc(100vh-4.2rem)] lg:w-auto lg:px-0 lg:py-4"
       >
         {/* Mobile-only: header hides these actions below `md`, so surface them here. */}
         <div className="mb-3 flex items-center gap-2 lg:hidden">
@@ -142,7 +154,7 @@ export function Sidebar({
           {PHASES.map((phase) => (
             <div key={phase.label}>
               <p className="phase-label">{phase.label}</p>
-              <ul className="m-0 list-none space-y-0.5 p-0">
+              <ul className="day-nav-list">
                 {phase.days.map((n) => {
                   const d = curriculum.days.find((x) => x.day === n)
                   if (!d) return null

@@ -13,6 +13,7 @@ import {
   YAxis,
 } from 'recharts'
 import { Card } from '@/components/ui/Card'
+import { PageHero } from '@/components/ui/PageHero'
 import { ProgressRing } from '@/components/ui/ProgressRing'
 import { XPBadge } from '@/components/ui/XPBadge'
 import { useProgress } from '@/context/ProgressContext'
@@ -102,10 +103,24 @@ export function AnalyticsDashboard() {
 
   return (
     <div className="analytics-dash">
-      <header className="analytics-dash__hero">
-        <h1>Analytics</h1>
-        <p>Progress signals from XP, practice, kinetic sessions, and adaptive focus.</p>
-      </header>
+      <PageHero
+        eyebrow="Progress"
+        title="Analytics"
+        watermark="%"
+        aside={
+          <ProgressRing
+            value={predicted}
+            size={54}
+            stroke={4}
+            label={`Predicted readiness ${predicted} of 100`}
+          />
+        }
+        meta={[
+          `${state.completedDays.length} of 20 days`,
+          `${state.solvedProblems.length} problems solved`,
+          `${state.kineticSessions.length} kinetic sessions`,
+        ]}
+      />
 
       <div className="analytics-dash__stats">
         <Card kicker="Total XP" title={`${state.xp} XP`}>

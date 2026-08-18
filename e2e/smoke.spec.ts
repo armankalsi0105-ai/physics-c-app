@@ -1,7 +1,13 @@
 import { test, expect } from '@playwright/test'
 
-test('home redirects into a day lesson', async ({ page }) => {
+test('home shows mission control and links into a day', async ({ page }) => {
   await page.goto('/')
+  await expect(
+    page.getByRole('heading', { name: /Start the 20-day run|Welcome back/ }),
+  ).toBeVisible()
+
+  // The primary CTA is the whole point of the page: one click back into study.
+  await page.getByRole('link', { name: /Begin Day 1|Continue Day \d+/ }).click()
   await page.waitForURL(/\/day\/\d+/)
   await expect(page.getByRole('heading').first()).toBeVisible()
 })

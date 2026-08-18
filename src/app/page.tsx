@@ -1,27 +1,11 @@
-'use client'
+import { HomeDashboard } from '@/components/home/HomeDashboard'
 
-import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
-import { loadProgress, maxUnlockedDay } from '@/lib/storage'
+export const metadata = {
+  title: 'Mission control — Mastery C',
+  description:
+    'Your 20-day run through AP Physics C and pre-calculus: pick up where you left off, see what is due, and steer by the whole arc.',
+}
 
-// Client redirect so returning students land on their active day.
 export default function HomePage() {
-  const router = useRouter()
-
-  useEffect(() => {
-    const state = loadProgress()
-    const unlocked = maxUnlockedDay(state)
-    const preferred = state.activeDay
-    const day =
-      Number.isInteger(preferred) && preferred >= 1 && preferred <= unlocked
-        ? preferred
-        : unlocked
-    router.replace(`/day/${day}`)
-  }, [router])
-
-  return (
-    <main className="flex min-h-screen items-center justify-center">
-      <p className="brand-mark text-xl text-[color:var(--muted)]">Mastery C</p>
-    </main>
-  )
+  return <HomeDashboard />
 }

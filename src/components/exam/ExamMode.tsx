@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { Calculator, Timer } from 'lucide-react'
 import { AppShell } from '@/components/layout/AppShell'
 import { FrqPanel } from '@/components/exam/FrqPanel'
+import { PageHero } from '@/components/ui/PageHero'
 import { SciCalculator } from '@/components/study/SciCalculator'
 import { isCorrect } from '@/components/practice/PracticeProblem'
 import { MathText } from '@/components/MathInline'
@@ -101,15 +102,24 @@ export function ExamMode() {
   return (
     <AppShell currentDay={state.activeDay}>
       <article className="exam-mode">
-        <header className="exam-mode__head">
-          <div>
-            <h1>AP Exam Mode</h1>
-            <p>Timed MCQ + one FRQ with error-carried-forward grading.</p>
-          </div>
-          <div className="exam-mode__timer">
-            <Timer className="h-4 w-4" />
-            {mm}:{ss}
-          </div>
+        <PageHero
+          eyebrow="Assessment"
+          title="AP Exam Mode"
+          watermark="AP"
+          aside={
+            <span
+              className={`exam-mode__timer ${left <= 300 ? 'is-urgent' : ''}`}
+            >
+              <Timer className="h-4 w-4" />
+              {mm}:{ss}
+            </span>
+          }
+          meta={[
+            `${mcqs.length} multiple choice`,
+            '1 free response',
+            'Error-carried-forward grading',
+          ]}
+        >
           <button
             type="button"
             className="btn-ghost"
@@ -118,7 +128,7 @@ export function ExamMode() {
             <Calculator className="h-4 w-4" />
             Calculator
           </button>
-        </header>
+        </PageHero>
 
         {calcOpen && (
           <div className="exam-mode__calc">
